@@ -1,0 +1,4 @@
+[submodule "project"]
+	path = project
+	url = https://github.com/OCA/project.git
+	branch = 16.0
