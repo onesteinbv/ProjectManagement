@@ -1,0 +1,4 @@
+[submodule "agreement"]
+	path = agreement
+	url = https://github.com/OCA/agreement.git
+	branch = 15.0
