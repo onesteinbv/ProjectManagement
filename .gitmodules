@@ -2,3 +2,11 @@
 	path = project
 	url = https://github.com/OCA/project.git
 	branch = 15.0
+[submodule "agreement"]
+	path = agreement
+	url = https://github.com/OCA/agreement.git
+	branch = 15.0
+[submodule "helpdesk"]
+	path = helpdesk
+	url = https://github.com/OCA/helpdesk.git
+	branch = 15.0
