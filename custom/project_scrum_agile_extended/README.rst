@@ -1,6 +1,6 @@
-================================
-Project Scrum Agile For Onesetin
-================================
+============================
+Project Scrum Agile Extended
+============================
 
 
 This module allows maintaining project Scrum Management Features specific for Onesetin's need.

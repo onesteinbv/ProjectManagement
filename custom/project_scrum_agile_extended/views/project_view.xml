@@ -10,7 +10,8 @@
                     (4, ref('project_management_security.group_supp_project_coordinator')),
                     (4, ref('project_management_security.group_project_coordinator')),
                     (4, ref('project_management_security.group_team_member')),
-                    (4, ref('project_management_security.group_cio'))]"/>
+                    (4, ref('project_management_security.group_cio'))]"
+        />
     </record>
 
     <record id="project.menu_projects" model="ir.ui.menu">
@@ -27,7 +28,8 @@
                     (4, ref('project_management_security.group_supp_project_coordinator')),
                     (4, ref('project_management_security.group_project_coordinator')),
                     (4, ref('project_management_security.group_team_member')),
-                    (4, ref('project_management_security.group_cio'))]"/>
+                    (4, ref('project_management_security.group_cio'))]"
+        />
     </record>
 
     <record id="project.menu_project_management" model="ir.ui.menu">
@@ -39,7 +41,8 @@
                     (4, ref('project_management_security.group_supp_project_coordinator')),
                     (4, ref('project_management_security.group_project_coordinator')),
                     (4, ref('project_management_security.group_team_member')),
-                    (4, ref('project_management_security.group_cio'))]"/>
+                    (4, ref('project_management_security.group_cio'))]"
+        />
     </record>
 
     <record id="project.menu_project_report" model="ir.ui.menu">
@@ -51,7 +54,23 @@
                     (4, ref('project_management_security.group_supp_project_coordinator')),
                     (4, ref('project_management_security.group_project_coordinator')),
                     (4, ref('project_management_security.group_team_member')),
-                    (4, ref('project_management_security.group_cio'))]"/>
+                    (4, ref('project_management_security.group_cio'))]"
+        />
+    </record>
+
+    <record id="inherit_onestain_edit_project" model="ir.ui.view">
+        <field name="name">inherit.onestain.edit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <field name="privacy_visibility" position="after">
+                <field name="actual_hours" widget="float_time" />
+                <field name="percentage_completed" />
+                <field name="overall_progress" />
+                <field name="closed_hours" widget="float_time" />
+                <field name="total_planned_hours" />
+            </field>
+        </field>
     </record>
 
 </odoo>
