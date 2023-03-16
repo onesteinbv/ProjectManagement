@@ -12,6 +12,7 @@ class ProjectScrumRelease(models.Model):
         "sprint_ids",
         "sprint_ids.progress",
         "sprint_ids.expected_hours",
+        "sprint_ids.state",
     )
     def _compute_progress(self):
         """ This method used to calculate progress based on planned hours,
@@ -26,7 +27,7 @@ class ProjectScrumRelease(models.Model):
                 if sprint.state != "cancel" and sprint.expected_hours > 0
             )
 
-    @api.depends("sprint_ids", "sprint_ids.expected_hours")
+    @api.depends("sprint_ids", "sprint_ids.expected_hours", "sprint_ids.state")
     def _compute_hours(self):
         """ This method used to calculate milestone planned hours based on
             sprint details and sprint detail's expected hours """
@@ -43,7 +44,6 @@ class ProjectScrumRelease(models.Model):
             milestone planned hours """
         for release in self:
             total_m_h = 0
-            release.weightage = 0
             for rel in release.project_id.release_ids:
                 if not rel.sprint_ids:
                     total_m_h += rel.total_planned_hours_edit

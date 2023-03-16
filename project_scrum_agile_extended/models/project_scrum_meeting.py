@@ -16,11 +16,9 @@ class ScrumMeeting(models.Model):
         @param self: The object pointer
         """
         if not self.stop and not self.duration:
-            duration = 1.00
-            self.duration = duration
+            self.duration = 1.00
         if self.allday:  # For all day event
-            duration = 24.0
-            self.duration = duration
+            self.duration = 24.00
             # change start_date's time to 00:00:00 in the user's timezone
             user = self.env.user
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc

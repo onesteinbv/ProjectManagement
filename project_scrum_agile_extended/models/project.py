@@ -33,8 +33,8 @@ class ProjectProject(models.Model):
         """
         Compute Closed Hours of Project.
         """
-        closed_hours = 0
         for project in self:
+            closed_hours = 0
             if project.actual_hours:
                 closed_hours = (
                     project.percentage_completed * project.actual_hours
@@ -95,5 +95,7 @@ class AccountAnalyticLine(models.Model):
         """ This method is used to update account based on project detail update """
         for line in self:
             line.account_id = (
-                line.project_id.analytic_account_id.id if line.project_id else False
+                line.project_id.analytic_account_id.id
+                if line.project_id and line.project_id.analytic_account_id
+                else False
             )

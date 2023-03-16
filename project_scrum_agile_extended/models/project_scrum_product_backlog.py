@@ -13,6 +13,9 @@ class ProjectScrumProductBacklog(models.Model):
         "tasks_id.planned_hours",
         "tasks_id.progress",
         "tasks_id.weightage",
+        "tasks_id.stage_id",
+        "tasks_id.product_backlog_id.task_hours",
+        "sprint_id.expected_hours",
     )
     def _compute_hours(self):
         """ This method is used to calculate weightage  based in related task
@@ -63,19 +66,21 @@ class ProjectScrumProductBacklog(models.Model):
     def _compute_author_id_editable(self):
         """" This method is used to define author is editable or not
             based on group and state """
+        grp_pm = self.env.user.has_group("project_management_security.group_im")
+        grp_custom_prj_crd = self.env.user.has_group(
+            "project_management_security.group_project_coordinator"
+        )
         for record in self:
-            grp_pm = self.env.user.has_group("project_management_security.group_im")
-            grp_custom_prj_crd = self.env.user.has_group(
-                "project_management_security.group_project_coordinator"
+            record.author_id_editable = (
+                True
+                if (
+                    grp_pm
+                    or grp_custom_prj_crd
+                    or record.project_id.user_id.id == self.env.user.id
+                    or record.state == "draft"
+                )
+                else False
             )
-            record.author_id_editable = False
-            if (
-                grp_pm
-                or grp_custom_prj_crd
-                or record.project_id.user_id.id == self.env.user.id
-                or record.state == "draft"
-            ):
-                record.author_id_editable = True
 
     name = fields.Char(
         "Title",

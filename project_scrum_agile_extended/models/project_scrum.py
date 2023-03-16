@@ -10,8 +10,12 @@ class ProjectScrumSprint(models.Model):
         "product_backlog_ids",
         "product_backlog_ids.expected_hours",
         "product_backlog_ids.effective_hours",
-        "state",
-        "estimate_adjustment",
+        "product_backlog_ids.stage_id",
+        "release_id.sprint_ids",
+        "release_id.sprint_ids.expected_hours",
+        "product_backlog_ids.stage_id",
+        "release_id.sprint_ids",
+        "release_id.sprint_ids.expected_hours",
     )
     def _compute_hours(self):
         """ This method used to calculate sprint weightage based on
@@ -20,10 +24,10 @@ class ProjectScrumSprint(models.Model):
         stage_id = self.env["project.task.type"].search(
             [("state", "=", "cancelled")], limit=1
         )
-        effective = 0
-        expected_hours = 0
-        progress = 0
         for sprint in self:
+            effective = 0
+            expected_hours = 0
+            progress = 0
             for backlog in sprint.product_backlog_ids:
                 if backlog.stage_id.id != stage_id.id:
                     effective += backlog.effective_hours
