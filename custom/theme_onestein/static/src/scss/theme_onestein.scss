@@ -1,0 +1,91 @@
+// OneStein Colors
+$onestein-blue: #1d355e;
+$onestein-yellow: #ffc03d;
+$onestein-yellow-hover: #ffaf0a;
+$onestein-btn-text: hsl(0, 0%, 20%);
+$onestein-white: #fff;
+$onestein-gray: #6c757d;
+
+// Buttons
+$btn-primary-color: $onestein-btn-text;
+$btn-primary-bg: $onestein-yellow;
+$btn-primary-border: #ffb823;
+
+
+// Navbar
+
+$navbar-inverse-bg: $onestein-blue;
+$navbar-inverse-border: $onestein-blue;
+
+$navbar-inverse-link-color: $onestein-white;
+$navbar-inverse-link-hover-color: $onestein-yellow;
+$navbar-inverse-link-hover-bg: transparent;
+
+$navbar-inverse-link-active-color: $onestein-yellow;
+$navbar-inverse-link-active-bg: transparent;
+
+
+// Side Menu
+// @odoo-control-panel-background-color: @onestein-blue;
+// @odoo-main-text-color: @onestein-white;
+
+// @odoo-brand-optional: @onestein-yellow;
+.o_menu_systray{
+    .dropdown-toggle{
+        &:hover {
+            color: $onestein-yellow  !important;
+            // background-color: $navbar-inverse-bg  !important;
+        }
+    }
+}
+.o_main_navbar{
+    background-color: $navbar-inverse-bg  !important;
+    .o_menu_sections,.o_navbar_apps_menu {
+        color: $onestein-white  !important;
+        .o_nav_entry,.dropdown,.dropdown-toggle {
+            &:hover {
+                color: $onestein-yellow  !important;
+                background-color: $navbar-inverse-bg  !important;
+            } 
+        }
+        .dropdown-menu {
+            background-color: $navbar-inverse-bg  !important;
+            .o_more_dropdown_section_group{
+                color: $onestein-gray  !important;
+                background-color: $navbar-inverse-bg  !important;
+            }
+            >a:not(.active) {
+                color: $onestein-white  !important;
+            }
+    
+            >a.active> {
+                color: $onestein-yellow  !important;
+                background-color: $navbar-inverse-bg  !important;
+            }
+    
+            >a {
+                &:hover {
+                    color: $onestein-yellow  !important;
+                    background-color: $navbar-inverse-bg  !important;
+                }
+            }
+    
+            .show {
+                color: $onestein-yellow  !important;
+                background-color: $navbar-inverse-bg  !important;
+            }
+        }
+    }
+    
+    
+}
+.btn-primary, .btn-info{
+    background-color: $btn-primary-bg !important; 
+    border-color: $btn-primary-border !important;
+    color: $btn-primary-color !important; 
+}
+.btn-fill-primary:hover, .btn-primary:hover{
+    border-color: $onestein-yellow-hover !important; 
+    color: $btn-primary-color !important; 
+    background-color: $onestein-yellow-hover !important;
+}

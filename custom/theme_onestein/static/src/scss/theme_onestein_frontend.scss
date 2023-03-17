@@ -1,0 +1,46 @@
+// OneStein Colors
+$onestein-blue: #1d355e;
+$onestein-yellow: #ffc03d;
+$onestein-btn-text: hsl(0, 0%, 20%);
+$onestein-white: #fff;
+$onestein-blue-bg: #0f1c35;
+
+$navbar-default-link-hover-color: $onestein-yellow;
+
+// Navbar
+
+$navbar-default-bg: $onestein-blue-bg;
+.navbar{ 
+    background-color: $onestein-blue-bg ;
+}
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link{
+    color: $onestein-white !important;
+    font-weight: bolder;
+}
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus{
+    color: $onestein-yellow !important;
+}
+.btn-primary{
+    background-color: $onestein-yellow  !important; 
+    border-color: $onestein-yellow !important; 
+    color: #333333 !important; 
+}
+.btn-fill-primary:hover, .btn-primary:hover{
+    border-color: $onestein-yellow !important;
+}
+
+.dropdown-menu {
+    background-color: $onestein-blue-bg !important; 
+}
+
+.dropdown-menu>li>a, .dropdown-menu>a,.navbar-light .dropdown-menu .dropdown-item {
+    color: $onestein-white !important; 
+    font-weight: bolder !important; 
+    background-color: transparent !important; 
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus,.dropdown-menu>a:hover,
+.dropdown-menu>a:focus,.navbar-light .dropdown-menu .dropdown-item:hover,.navbar-light .dropdown-menu .dropdown-item:focus {
+    color: $onestein-yellow !important; 
+    background-color: transparent !important; 
+}
