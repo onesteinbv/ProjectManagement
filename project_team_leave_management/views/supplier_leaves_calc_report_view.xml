@@ -1,0 +1,39 @@
+<odoo>
+
+    <!-- Model Team Leaves Report -->
+    <!-- Calendar View supplier.leaves -->
+    <record id="view_supplier_leaves_report_calendar" model="ir.ui.view">
+        <field name="model">supplier.leaves.report</field>
+        <field name="arch" type="xml">
+            <calendar
+                string='Team Leaves'
+                date_start='date_from'
+                date_stop='date_to'
+                color='partner_id'
+                mode='month'
+                all_day="date_to"
+            >
+                <field name="partner_id" />
+                <field name="leave_category" />
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action View supplier.leaves -->
+    <record id="action_supplier_leaves_report" model="ir.actions.act_window">
+        <field name="name">Team Leaves Report</field>
+        <field name="res_model">supplier.leaves.report</field>
+        <field name="view_mode">calendar</field>
+    </record>
+
+    <!-- Menu Team Leaves -->
+    <menuitem
+        id="menu_supplier_leaves_report_calendar"
+        name="Team Leaves Report"
+        parent="project_team_leave_management.menu_supplier_leaves"
+        action="action_supplier_leaves_report"
+        sequence="32"
+        groups="base.group_system,project_management_security.group_cio,project.group_project_manager,project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator"
+    />
+
+</odoo>

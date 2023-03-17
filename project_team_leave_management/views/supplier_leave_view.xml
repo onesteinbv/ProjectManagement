@@ -1,0 +1,77 @@
+<odoo>
+    <!-- Model Team Leaves -->
+    <!-- Form View supplier.leaves -->
+    <record id="view_supplier_leaves_form" model="ir.ui.view">
+        <field name="name">supplier.leaves.form</field>
+        <field name="model">supplier.leaves</field>
+        <field name="arch" type="xml">
+            <form string="Team Leaves">
+               <sheet>
+                   <group col="2">
+                       <field name="subject" />
+                   </group>
+                   <group class='oe_title'>
+                       <field name="parent_id" invisible='1' />
+                       <field
+                            name="partner_id"
+                            options="{'no_create': True, 'no_open': True}"
+                        />
+                   </group>
+                   <group col='4'>
+                       <field name="date_from" required='1' />
+                       <field name="date_to" required='1' />
+                       <field name="leave_duration" />
+                   </group>
+                   <div>
+                       <separator string="Description" />
+                       <field
+                            name="description"
+                            placeholder="Description for Leave..."
+                        />
+                   </div>
+               </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View supplier.leaves -->
+    <record id="view_supplier_leaves_tree" model="ir.ui.view">
+        <field name="name">supplier.leaves.tree</field>
+        <field name="model">supplier.leaves</field>
+        <field name="arch" type="xml">
+            <tree string="Team Leaves">
+                <field name="partner_id" />
+                <field name="description" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="leave_duration" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action View supplier.leaves -->
+    <record id="action_supplier_leaves" model="ir.actions.act_window">
+        <field name="name">Team Leaves</field>
+        <field name="res_model">supplier.leaves</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_supplier_leaves_tree" />
+    </record>
+
+    <!-- Menu Team Leaves -->
+    <menuitem
+        id="menu_supplier_leaves"
+        name="Team Leaves"
+        parent="project.menu_main_pm"
+        sequence="3"
+        groups="base.group_system,project_management_security.group_cio,project.group_project_manager,project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,project_management_security.group_team_member"
+    />
+
+    <menuitem
+        id="menu_child_supplier_leaves"
+        name="Team Leaves"
+        parent="project_team_leave_management.menu_supplier_leaves"
+        action="action_supplier_leaves"
+        sequence="31"
+        groups="base.group_system,project_management_security.group_cio,project.group_project_manager,project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,project_management_security.group_team_member"
+    />
+</odoo>
