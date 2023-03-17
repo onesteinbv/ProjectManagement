@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="project_approve_wiz_view_form" model="ir.ui.view">
+        <field name="name">project.approve.wiz.form</field>
+        <field name="model">project.approve.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Reason">
+                <sheet>
+                    <group>
+                        <field name="reason" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_approve"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    or
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        type="object"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_approve_wiz_action_form" model="ir.actions.act_window">
+        <field name="name">Reason</field>
+        <field name="res_model">project.approve.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
