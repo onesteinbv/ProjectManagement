@@ -54,7 +54,7 @@
             </field>
             <xpath expr="/form/sheet/notebook/page[@name='settings']" position="after">
                 <page string="Goal"
-                      attrs="{'invisible':[('is_scrum', '=', False)]}">
+                      invisible="1">
                     <separator string="Goal"/>
                     <field name="goal"/>
                 </page>
