@@ -5,4 +5,5 @@ helpdesk/helpdesk_mgmt_project
 project_budget_management
 project_scrum_agile_extended
 project_team_leave_management
+agreement_extended
 third_party/project_scrum_agile
