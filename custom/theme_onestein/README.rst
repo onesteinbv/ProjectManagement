@@ -1,7 +1,7 @@
 ==============
 Onestein Theme
 ==============
-Custom theme for Onesetin
+Custom theme for Onestein
 
 Authors
 ~~~~~~~
