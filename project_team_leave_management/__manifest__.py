@@ -12,6 +12,7 @@
         "security/ir_rules.xml",
         "views/supplier_leave_view.xml",
         "views/supplier_leaves_calc_report_view.xml",
+        "views/res_partner_view.xml",
     ],
     "installable": True,
     "application": True,

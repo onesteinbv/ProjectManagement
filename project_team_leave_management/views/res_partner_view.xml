@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">res.partner.view.search.inherit.canna</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="after">
+                <separator />
+                <filter string="Active" name="active" domain="[('active','=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="inherit_res_partner_form_public_holiday" model="ir.ui.view">
+        <field name="name">inherit.res.partner.form.public.holiday</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="object" class="oe_stat_button" icon="fa-users" name="action_view_partner_users">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_users" />
+                        </span>
+                        <span class="o_stat_text">Users</span>
+                    </div>
+                </button>
+            </div>
+            <field name="vat" position="after">
+                <field name="resource_calendar_id"/>
+            </field>
+            <xpath expr="//page[@name='sales_purchases']" position='after'>
+                <!-- <page name="public_holidays" string="Public Holidays" attrs="{'invisible': [('is_company','=',False),('customer_rank','>', 0)]}"> -->
+                <page name="public_holidays" string="Public Holidays" attrs="{'invisible': [('is_company','=',False)]}">
+                    <field name="public_holiday_ids">
+                        <tree name='Public Holidays' editable='bottom'>
+                            <field name="date"/>
+                            <field name="weekday"/>
+                            <field name="reason"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="partner_supplier_action" model="ir.actions.act_window">
+        <field name="name">Supplier</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', False)]</field>
+        <!-- <field name="domain">[('supplier_rank','>',0), ('parent_id', '=', False)]</field> -->
+        <field name="context" eval="{'default_country_id': ref('base.nl'), 'default_customer_rank':0, 'default_supplier_rank': 1, 'search_default_supplier_rank':0 , 'default_company_type': 'company','default_is_company': 1, 'active_test': False, 'search_default_active':1}" />
+        <field name="filter" eval="True"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a supplier in your address book.
+            </p><p>
+            Odoo helps you easily track all activities related to
+            a customer: discussions, history of business opportunities,
+            documents, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_supplier_action_view1" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="partner_supplier_action"/>
+    </record>
+
+    <record id="partner_supplier_action_view2" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="act_window_id" ref="partner_supplier_action"/>
+    </record>
+
+    <record id="partner_supplier_action_view3" model="ir.actions.act_window.view">
+        <field eval="3" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="act_window_id" ref="partner_supplier_action"/>
+    </record>
+
+    <menuitem id="menu_partner_supplier"
+        name="Suppliers"
+        parent="project.menu_main_pm"
+        sequence="2"
+        groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system,project_management_security.group_project_coordinator" />
+
+    <menuitem id="menu_partner_supplier_action"
+        name="Suppliers"
+        parent="project_team_leave_management.menu_partner_supplier"
+        action="partner_supplier_action"
+        sequence="1"
+        groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system" />
+    
+
+</odoo>
