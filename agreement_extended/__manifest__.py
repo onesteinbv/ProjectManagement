@@ -14,9 +14,9 @@
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "https://www.serpentcs.com/",
     # Dependancies
-    "depends": ["agreement", "project"],
+    "depends": ["agreement", "project_team_leave_management"],
     # Views
-    "data": ["views/agreement_view.xml"],
+    "data": ["views/agreement_view.xml", "views/res_partner_view.xml"],
     # Technical
     "installable": True,
     "application": True,

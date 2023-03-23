@@ -56,4 +56,13 @@
         </field>
     </record>
 
+    <menuitem
+        id="agreement_menu"
+        name="Contracts"
+        parent="project_team_leave_management.menu_partner_supplier"
+        sequence="2"
+        action="agreement.agreement_action"
+        groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system,project_management_security.group_project_coordinator"
+    />
+
 </odoo>
