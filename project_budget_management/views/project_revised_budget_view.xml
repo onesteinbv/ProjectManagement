@@ -86,7 +86,8 @@
         action="project_budget_revesion_action_view"
         parent="project.menu_project_report"
         sequence="22"
-        groups="project_management_security.group_cio,project.group_project_manager,-project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,-project_management_security.group_team_member,base.group_system"/>
+        groups="project_management_security.group_cio,project.group_project_manager,-project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,-project_management_security.group_team_member,base.group_system"
+    />
     />
 
 </odoo>
