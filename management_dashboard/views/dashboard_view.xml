@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="management_dashboard_action" model="ir.actions.client">
+        <field name="name">Management Dashboard</field>
+        <field name="tag">management_dashboard.PMDashboardView</field>
+    </record>
+
+    <menuitem id="management_dashboard_menu"
+        name="Management Dashboard"
+        action="management_dashboard_action"
+        parent="project.menu_main_pm"
+        sequence="1"
+        groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+        />
+
+</odoo>

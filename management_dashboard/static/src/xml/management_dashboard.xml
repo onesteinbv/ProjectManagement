@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="md_template" xml:space="preserve">
+    <t t-name="management_dashboard.PMDashboardView">
+        <div id="content-wrapper management_dashboard">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="dashboard_top_nav">
+                        <button class="dashboard_sidebar-toggle is-closed">
+                            <i class="fa fa-angle-right icon"></i>
+                        </button>
+
+                        <div class="dashboard_filter">
+                            <button t-att-class="(widget.filter == 'today') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="today">
+                                <span class="filter_btn_inner">Today</span>
+                            </button>
+
+                            <button t-att-class="(widget.filter == 'week') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="week">
+                                <span class="filter_btn_inner">This Week (<t t-esc="widget.week_number"/>)</span>
+                            </button>
+
+                            <button t-att-class="(widget.filter == 'month') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="month">
+                                <span class="filter_btn_inner">This Month</span>
+                            </button>
+
+                            <button t-att-class="(widget.filter == 'year') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="year">
+                                <span class="filter_btn_inner">This Year</span>
+                            </button>
+
+                            <div class="div_filter_input">
+                                <span class="span_filter" id="start_date"></span>
+                                <label class="label_filter">TO</label>
+                                <span class="span_filter" id="end_date"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="dashboard_last_update">
+
+                            <label class="label_last_update">Last Updated On:</label>
+                            <span class="span_last_update"><t t-esc="widget.last_update_on"/></span>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card Row -->
+                <div>
+                    <div class="col-md-12 padding-5 row">
+
+                        <!-- Last Updated on Card -->
+                        <div class="col-md-3 padding-5">
+                            <div class="w-100 card-main">
+                                <div class="card-header" t-att-style="'background:' + widget.card_header_color">
+                                    Overall Project Status
+                                </div>
+                                <canvas id="project-status-chart" height="175" width="240" style="margin: 13px 5px 5px 19px; max-height: 168px; max-width: 230px;"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Projects at Budget Risk Card -->
+                        <div class="col-md-3 padding-5">
+                            <div class="w-100 card-main">
+                                <div class="card-header" t-att-style="'background:' + widget.card_header_color">
+                                    Projects at Budget Risk
+                                </div>
+                                <canvas id="budget-risk-project-chart" height="175" style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Projects at Time Risk Card -->
+                        <div class="col-md-3 padding-5">
+                            <div class="w-100 card-main">
+                                <div class="card-header" t-att-style="'background:' + widget.card_header_color">
+                                    Projects at Time Risk
+                                </div>
+                                <canvas id="projects-time-risk-chart" height="175" style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Vendor Utilization Card -->
+                        <div class="col-md-3 padding-5">
+                            <div class="w-100 card-main">
+                                <div class="card-header" t-att-style="'background:' + widget.card_header_color">
+                                    Vendor Utilization
+                                </div>
+                                <canvas id="vendor-utilization-chart" height="175" width="240" style="margin: 10px 5px 5px 19px; max-height: 168px; max-width: 230px;"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Project Status Heat Map Area -->
+                <div class="row">
+                    <div class="col-md-12 padding-5 margin-5" style="width: calc(100% - 10px) !important;">
+                        <div class="w-100 card-main">
+                            <div class="card-small-header" t-att-style="'background:' + widget.card_header_color">
+                                Project Report
+                            </div>
+                            <table class="table w-100 table-condensed table-hover no-wrap table-bordered" id="heat-map-table">
+                                <thead>
+                                    <tr>
+                                        <th class="middle-header" width="28%">Project</th>
+                                        <th class="middle-header" width="1%">Status</th>
+                                        <th class="middle-header" width="11%">Resources</th>
+                                        <th class="middle-header" width="5%">Start Date</th>
+                                        <th class="middle-header" width="5%">Planned Finish Date</th>
+                                        <th class="middle-header" width="5%">Actual Finish Date</th>
+                                        <th class="middle-header" width="5%">Open Tasks</th>
+                                        <th class="middle-header" width="5%">All Tasks</th>
+                                        <th class="middle-header" width="5%">Open Issues</th>
+                                        <th class="middle-header" width="5%">All Issues</th>
+                                        <th class="middle-header" width="5%">Spent Budget</th>
+                                        <th class="middle-header" width="5%">Pending Invoices</th>
+                                        <th class="middle-header" width="5%">Budget</th>
+                                        <th class="middle-header" width="5%">Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Analysis Area -->
+                <div class="row">
+                    <div class="col-md-12 padding-5">
+                        <div class="card-main" style="width: calc(100% - 10px); margin: 5px;">
+                            <div class="card-small-header" t-att-style="'background:' + widget.card_header_color">
+                                Project Timeline
+                            </div>
+                            <div class="gantt-wrapper gantt-full-width">
+                                <div class="gantt-target"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Summery Area -->
+                <!-- <div class="row"> <div class="summery-area padding-5"> <t t-foreach="widget.projects" t-as="project"> <div class="width-19p summery-body pull-left project_name" t-att-data-project="project.id"> <div class="summery-card"> <h3 class=""> <strong><t
+                t-esc="project.name"/></strong> </h3> <p> Status: <label class="circle-label bg-yellow"/> </p> <p> Stage: <strong> <t t-if="project.project_phase == 'init'"> Initial </t> <t t-elif="project.project_phase == 'plan'"> Planning </t> <t
+                t-elif="project.project_phase == 'execute'"> Execution </t> <t t-elif="project.project_phase == 'control'"> Control </t> <t t-elif="project.project_phase == 'close'"> Close </t> </strong> </p> <p> Budget(Actual): <strong> <t
+                t-esc="project.actual_budget" t-options="{'widget': 'monetary', 'display_currency': project.currency_id}"/> </strong> </p> <p> Budget(Max): <strong> <t t-esc="project.spend_budget" t-options="{'widget': 'monetary', 'display_currency':
+                project.currency_id}"/> </strong> </p> <p> Spend/Budget(Max): <strong>85%</strong> </p> </div> </div> </t> </div> </div> -->
+
+            </div>
+        </div>
+    </t>
+</templates>

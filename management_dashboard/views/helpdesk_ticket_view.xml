@@ -1,0 +1,11 @@
+<odoo>
+    <record id="ticket_view_form_inherit" model="ir.ui.view">
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_email']" position="after">
+                <field name="ticket_aging" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
