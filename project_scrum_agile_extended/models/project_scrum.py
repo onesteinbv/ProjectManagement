@@ -97,19 +97,19 @@ class ProjectScrumSprint(models.Model):
                     % (self.env.user.name, rec.sprint_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
-            res = super(ProjectScrumSprint, self).write(vals)
-            if vals.get("release_id", ""):
-                for rec in self:
-                    msg = (
-                        _(
-                            """ <ul class="o_mail_thread_message_tracking">
-                        <li>Sprint Added by: <span> %s </span></li><li>
-                        Sprint Number: <span> %s </span></li>
-                        Sprint Name: <span> %s </span></li>"""
-                        )
-                        % (self.env.user.name, rec.sprint_number, rec.name)
+        res = super(ProjectScrumSprint, self).write(vals)
+        if vals.get("release_id", ""):
+            for rec in self:
+                msg = (
+                    _(
+                        """ <ul class="o_mail_thread_message_tracking">
+                    <li>Sprint Added by: <span> %s </span></li><li>
+                    Sprint Number: <span> %s </span></li>
+                    Sprint Name: <span> %s </span></li>"""
                     )
-                    rec.release_id.message_post(body=msg)
+                    % (self.env.user.name, rec.sprint_number, rec.name)
+                )
+                rec.release_id.message_post(body=msg)
         return res
 
     def unlink(self):
