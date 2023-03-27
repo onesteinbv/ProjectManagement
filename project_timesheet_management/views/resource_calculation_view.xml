@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="resource_calculation_view_tree" model="ir.ui.view">
+        <field name="name">resource.calculation.tree</field>
+        <field name="model">resource.calculation</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0">
+                <field name="partner_id" />
+                <field name="resource_id" />
+                <field name="project_id" />
+                <field name="timesheet_invoice_id" />
+                <field name="invoice_date" />
+                <field name="resource_amount" />
+                <field name="worked_hours" widget="float_time" />
+                <field name="total_amount" />
+                <field name="timesheet_invoice_id" invisible="True" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="resource_calculation_view_form" model="ir.ui.view">
+        <field name="name">resource.calculation.form</field>
+        <field name="model">resource.calculation</field>
+        <field name="arch" type="xml">
+            <form
+                string="Resource Calculation"
+                duplicate="0"
+                create="0"
+                edit="0"
+            >
+                <sheet>
+                    <group>
+                        <field name="resource_id" />
+                        <field name="project_id" />
+                        <field name="timesheet_invoice_id" />
+                        <field name="invoice_date" />
+                        <field name="resource_amount" />
+                        <field name="worked_hours" widget="float_time" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_calculation_view_search" model="ir.ui.view">
+        <field name="name">resource.calculation.search</field>
+        <field name="model">resource.calculation</field>
+        <field name="arch" type="xml">
+            <search string="Resource Calculation">
+                <field name="resource_id" />
+                <field name="project_id" />
+                <field name="invoice_date" />
+                <field name="resource_amount" />
+                <field name="worked_hours" />
+                <field name="timesheet_invoice_id" />
+                <group string="Group By">
+                    <filter
+                        name="groupby_resource_id"
+                        string="Resource"
+                        context="{'group_by':'resource_id'}"
+                    />
+                    <filter
+                        name="groupby_partner_id"
+                        string="Supplier"
+                        context="{'group_by':'partner_id'}"
+                    />
+                    <filter
+                        name="groupby_project_id"
+                        string="Project"
+                        context="{'group_by':'project_id'}"
+                    />
+                    <filter
+                        name="groupby_timesheet_invoice_id"
+                        string="Timesheet Invoice"
+                        context="{'group_by':'timesheet_invoice_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="resource_calculation_action_form" model="ir.actions.act_window">
+        <field name="name">Resource Calculation</field>
+        <field name="res_model">resource.calculation</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_groupby_timesheet_invoice_id': 0,
+                               'search_default_groupby_resource_id': 1 }</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                No Resource Calculation Found
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_resource_calculation"
+        name="Resource Calculation"
+        parent="project.menu_main_pm"
+        action="resource_calculation_action_form"
+        sequence="3"
+        groups="project_management_security.group_cio,project.group_project_manager,base.group_system"
+    />
+
+</odoo>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="timesheet_invoice_view_form" model="ir.ui.view">
+        <field name="name">timesheet.invoice.form</field>
+        <field name="model">timesheet.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Timesheet Invoice">
+                <header>
+                    <field name="user_is_admin" invisible="1" />
+                    <button
+                        type="object"
+                        string="Confirm"
+                        name="button_confirm"
+                        states="draft"
+                        groups="project_management_security.group_project_coordinator,project.group_project_manager,base.group_system"
+                    />
+                    <button
+                        type="object"
+                        string="Pre Approve"
+                        name="button_pre_approve"
+                        states="confirm"
+                        groups="project.group_project_manager,base.group_system"
+                    />
+                    <button
+                        type="object"
+                        string="Approve"
+                        name="button_approve"
+                        states="pre-approved"
+                        groups="project_management_security.group_cio,base.group_system"
+                    />
+                    <button
+                        type="object"
+                        string="Reject"
+                        name="button_rejected"
+                        attrs="{'invisible': ['|', ('show_reject_draft_btn', '=', False), ('state', 'in', ('rejected', 'completed'))]}"
+                    />
+                    <button
+                        type="object"
+                        string="Set To Draft"
+                        name="button_draft"
+                        attrs="{'invisible': ['|', ('show_reject_draft_btn', '=', False), ('state', 'in', ('draft', 'completed'))]}"
+                    />
+                    <button
+                        type="object"
+                        string="Completed"
+                        name="button_completed"
+                        states="approved"
+                        groups="project_management_security.group_finance_controller,base.group_system"
+                    />
+                    <button
+                        string="Timesheet Invoice Edit"
+                        type="action"
+                        class="btn-primary"
+                        attrs="{'invisible':['|', ('state','=', 'draft'),('user_is_admin', '=', False)]}"
+                        name="%(action_timesheet_invoice_wizard)d"
+                    />
+                    <field name='state' widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field
+                                name="partner_id"
+                                context="{'default_customer':0, 'default_supplier': 1, 'search_default_supplier':1, 'default_company_type': 'company','default_is_company': 1}"
+                                options="{'no_create': True}"
+                            />
+                            <field
+                                name="project_id"
+                                domain="[('resource_ids', '=', partner_id)]"
+                                options="{'no_create': True}"
+                            />
+                            <field name="ref_no" required="1" />
+                            <field name="create_uid" readonly="1" />
+                            <field
+                                name="pre_approved_by"
+                                attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}"
+                            />
+                            <field
+                                name="approved_by"
+                                attrs="{'invisible': [('state','not in',('approved', 'completed'))]}"
+                            />
+                            <field
+                                name="completed_by"
+                                attrs="{'invisible': [('state','!=','completed')]}"
+                            />
+                        </group>
+                        <group>
+                            <field name="submit_date" required="True" />
+                            <field name="date_due" />
+                            <!-- <field name="entity_id" /> -->
+                            <field name="document_type" />
+                            <field name="timesheet_inv_age" />
+                            <field
+                                name="pre_approved_on"
+                                attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}"
+                            />
+                            <field
+                                name="approved_on"
+                                attrs="{'invisible': [('state','not in',('approved', 'completed'))]}"
+                            />
+                            <field
+                                name="completed_date"
+                                attrs="{'invisible': [('state','!=','completed')]}"
+                            />
+                            <field name="show_reject_draft_btn" invisible="1" />
+                        </group>
+                    </group>
+                    <separator string="Total Amount/Hours" />
+                    <group>
+                        <group>
+                            <field
+                                name="total_amount"
+                                force_save="1"
+                                attrs="{'readonly': ['|', ('state','!=', 'draft'), ('document_type','!=', 'invoice')]}"
+                            />
+                        </group>
+                        <group>
+                            <field name="total_hours" widget="float_time" />
+                        </group>
+                    </group>
+                    <separator string="Resource Calculation" />
+                    <group>
+                        <field name="resource_calculation_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="resource_id" />
+                                <field name="resource_amount" />
+                                <field
+                                    name="worked_hours"
+                                    widget="float_time"
+                                />
+                                <field
+                                    name="timesheet_invoice_id"
+                                    invisible="True"
+                                />
+                            </tree>
+                        </field>
+                    </group>
+                    <separator string="Note" />
+                    <field name="description" />
+                    <!-- <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total"> <field name="total_amount"/> <field name="total_hours" widget="float_time"/> </group> -->
+                </sheet>
+                <div class="oe_chatter">
+                    <field
+                        name="message_follower_ids"
+                        widget="mail_followers"
+                        groups="base.group_user"
+                    />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="timesheet_invoice_view_tree" model="ir.ui.view">
+        <field name="name">timesheet.invoice.tree</field>
+        <field name="model">timesheet.invoice</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-success="state=='approved'"
+                decoration-danger="state == 'rejected'"
+                decoration-info="state == 'completed'"
+            >
+                <field name="ref_no" />
+                <field name="partner_id" />
+                <field name="project_id" />
+                <!-- <field name="entity_id" /> -->
+                <field name="submit_date" />
+                <field name="date_due" />
+                <field name="create_uid" />
+                <field name="pre_approved_by" />
+                <field name="pre_approved_on" />
+                <field name="approved_on" />
+                <field name="state" />
+                <field name="timesheet_inv_age" />
+                <field name="document_type" />
+                <field name="total_amount" />
+                <field name="total_hours" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="timesheet_invoice_action_form" model="ir.actions.act_window">
+        <field name="name">Timesheet Invoice</field>
+        <field name="res_model">timesheet.invoice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create the Invoice from Timesheets
+            </p>
+        </field>
+        <field
+            name="context"
+        >{'search_default_draft': 1, 'search_default_confirm': 1, 'search_default_pre-approved': 1}</field>
+    </record>
+
+    <record id="timesheet_invoice_view_search" model="ir.ui.view">
+        <field name="name">timesheet.invoice.search</field>
+        <field name="model">timesheet.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Timesheet Invoice">
+                <field name="ref_no" />
+                <field name="partner_id" />
+                <field name="project_id" />
+                <field name="submit_date" />
+                <field name="document_type" />
+                <filter
+                    name="draft"
+                    string="Draft"
+                    domain="[('state','=','draft')]"
+                />
+                <filter
+                    name="confirm"
+                    string="Confirm"
+                    domain="[('state','=','confirm')]"
+                />
+                <filter
+                    name="pre-approved"
+                    string="Pre Approved"
+                    domain="[('state','=','pre-approved')]"
+                />
+                <group string="Group By">
+                    <filter
+                        name="group_project_id"
+                        string="Project"
+                        context="{'group_by':'project_id'}"
+                    />
+                    <filter
+                        name="group_partner_id"
+                        string="Supplier"
+                        context="{'group_by':'partner_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_timesheet_invoice"
+        name="Timesheet Invoice"
+        parent="project.menu_main_pm"
+        action="timesheet_invoice_action_form"
+        sequence="2"
+        groups="project_management_security.group_cio,project_management_security.group_finance_controller,project.group_project_manager,project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,-project_management_security.group_team_member"
+    />
+
+</odoo>

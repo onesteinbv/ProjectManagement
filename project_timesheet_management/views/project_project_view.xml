@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="inherit_edit_project_for_timesheet" model="ir.ui.view">
+        <field name="name">inherit.edit.project.for.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <field name="privacy_visibility" position="after">
+                <field name="resource_ids" widget="many2many_tags" />
+            </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    class="oe_stat_button"
+                    name="action_view_invoices"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,base.group_system"
+                    type="object"
+                    icon="fa-usd"
+                >
+                    <field
+                        string="Invoices"
+                        name="timesheet_invoice_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

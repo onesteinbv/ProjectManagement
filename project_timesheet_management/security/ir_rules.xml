@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rule_project_project_team_member_1" model="ir.rule">
+        <field name="name">Project Team Member</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('favorite_user_ids', 'in', user.id),('resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_team_member'))]"/>
+    </record>
+
+    <record id="project_member_rule" model="ir.rule" >
+        <field name="name">Project: Project Member Rule</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">['|',('favorite_user_ids', 'in', user.id),('resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project.group_project_user'))]"/>
+    </record>
+
+    <record id="project_supplier_project_coordinator_rule" model="ir.rule">
+        <field name="name">Project: Supplier Project Coordinator Rule</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">['|',('favorite_user_ids', 'in', user.id),('resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]"/>
+    </record>
+
+    <record id="project_project_coordinator_rule" model="ir.rule">
+        <field name="name">Project: Project Coordinator Rule</field>
+        <field name="model_id" ref="project.model_project_project" />
+        <field name="domain_force">['|',('favorite_user_ids', 'in', user.id),('resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_project_coordinator'))]" />
+    </record>
+
+    <record id="task_member_rule" model="ir.rule">
+        <field name="name">Task: Task Member Rule</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">['|',('project_id.favorite_user_ids', 'in', user.id),('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project.group_project_user'))]"/>
+    </record>
+
+    <record id="task_supplier_coordinator_rule" model="ir.rule">
+        <field name="name">Task: Supplier Coordinator Rule</field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="domain_force">['|',('project_id.favorite_user_ids', 'in', user.id),('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]" />
+    </record>
+
+    <record id="task_custom_coordinator_rule" model="ir.rule">
+        <field name="name">Task: Custom Coordinator Rule</field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="domain_force">['|',('project_id.favorite_user_ids', 'in', user.id),('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_project_coordinator'))]" />
+    </record>
+
+    <record id="timesheet_invoice_team_member_rule" model="ir.rule">
+        <field name="name">Timesheet Invoice: Timesheet Invoice Project Team Member Rule</field>
+        <field name="model_id" ref="project_timesheet_management.model_timesheet_invoice"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_team_member'))]"/>
+    </record>
+
+    <record id="timesheet_invoice_coordinator_rule" model="ir.rule">
+        <field name="name">Timesheet Invoice: Timesheet Invoice Supplier Project Coordinator Rule</field>
+        <field name="model_id" ref="project_timesheet_management.model_timesheet_invoice"/>
+        <field name="domain_force">[('partner_id', 'in', (user.partner_id.parent_id.id, user.partner_id.id)), '|',('project_id.favorite_user_ids', 'in', user.id), ('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]"/>
+    </record>
+
+    <record id="timesheet_invoice_coordinator_rule" model="ir.rule">
+        <field name="name">Timesheet Invoice: Timesheet Invoice Project Coordinator Rule</field>
+        <field name="model_id" ref="project_timesheet_management.model_timesheet_invoice" />
+        <field name="domain_force">['|', ('project_id.favorite_user_ids', 'in', user.id), ('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_project_coordinator'))]" />
+    </record>
+
+    <record id="timesheet_supplier_project" model="ir.rule">
+        <field name='name'>Timesheet Supplier Project</field>
+        <field name='model_id' ref="analytic.model_account_analytic_line"/>
+        <field name="domain_force">['|',('project_id.favorite_user_ids','in',user.id),('project_id.resource_ids','in',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]"/>
+    </record>
+
+</odoo>

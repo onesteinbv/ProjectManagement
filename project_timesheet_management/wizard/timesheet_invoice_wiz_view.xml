@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_timesheet_invoice_wizard" model="ir.ui.view">
+        <field name="name">Timesheet Invoice</field>
+        <field name="model">timesheet.invoice.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Timesheet Invoice">
+                <group>
+                    <group>
+                        <field
+                            name="partner_id"
+                            context="{'default_customer':0, 'default_supplier': 1, 'search_default_supplier':1, 'default_company_type': 'company','default_is_company': 1}"
+                            options="{'no_create': True}"
+                        />
+                        <field
+                            name="project_id"
+                            domain="[('resource_ids', '=', partner_id)]"
+                            options="{'no_create': True}"
+                            attrs="{'required': [('partner_id', '!=', False)]}"
+                        />
+                        <field name="ref_no" />
+                    </group>
+                    <group>
+                        <field name="submit_date" />
+                        <field name="date_due" />
+                        <!-- <field name="entity_id" /> -->
+                        <field name="document_type" />
+                    </group>
+                </group>
+                <separator string="Resource Calculation" />
+                <group>
+                    <field name="wiz_resource_calculation_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="resource_id" required="1" />
+                            <field name="resource_amount" />
+                            <field name="worked_hours" widget="float_time" />
+                        </tree>
+                    </field>
+                </group>
+                <separator string="Note" />
+                <field name="description" />
+                <footer>
+                    <button
+                        name="action_save"
+                        string="Save"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    or
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_timesheet_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Timesheet Invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">timesheet.invoice.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Timesheet Invoice Confirmed, Notify Project Manager to Pre-Approe -->
+    <record id="email_timesheet_invoice_confirmed" model="mail.template">
+        <field name="name">Timesheet Invoice {{(dict(object.fields_get(allfields=['state'])['state']['selection'])[object.state])}}</field>
+        <field name="subject">Timesheet Invoice {{ (ctx['state']) }}: {{ (object.display_name or '') }} - {{ (object.partner_id.name or '') }}</field>
+        <field name="model_id" ref="model_timesheet_invoice" />
+        <field name="auto_delete" eval="False" />
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Dear
+                <t t-if="object.project_id.user_id">
+                    <t t-out="object.project_id.user_id.name or ''"></t>
+                </t>
+                <br /><br />
+                The Timesheet Invoice with the following details has been <t t-out="ctx['state']"/> by
+                <t t-if="user.name"><strong t-out="user.name or ''"></strong></t>
+                <br />
+                <strong>Reference No. </strong>:<t t-out="object.ref_no or '-'"/>
+                <br />
+                <strong>Supplier </strong>:<t t-out="object.partner_id.name or '-'"/>
+                <br />
+                <strong>Project </strong>:<t t-out="object.project_id.name or '-'"/>
+                <br />
+                <strong>Submit Date </strong>:<t t-out="object.submit_date or '-'"/>
+                <br />
+                <strong>Document Type </strong>:<t t-out="object.document_type or '-'"/>
+                <br />
+                <strong>Total Amount </strong>:<t t-out="object.total_amount or '-'"/>
+                <br />
+                <strong>Total Hours </strong>:<t t-out="&quot;%.2f&quot; % object.total_hours or '-'"/>
+                <br />
+                <strong>Note </strong>:<t t-out="object.description or '-'"/>
+                <br />
+                <t t-set="website_url" t-value="object.sudo().get_timesheet_invoice_url()"></t>
+                <b><a t-att-href='website_url' t-out="website_url or ''" class="btn btn-primary">View Timesheet Invoice</a></b><br />
+            </p>
+            </div>
+        </field>
+    </record>
+
+</odoo>
