@@ -20,6 +20,7 @@
     # Views
     "data": [
         "security/ir_rules.xml",
+        "security/ir.model.access.csv",
         "views/project_scrum_release_view.xml",
         "views/project_scrum_view.xml",
         "views/account_analytic_line_view.xml",

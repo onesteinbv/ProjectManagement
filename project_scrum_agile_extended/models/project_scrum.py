@@ -85,21 +85,8 @@ class ProjectScrumSprint(models.Model):
     def write(self, vals):
         """ This method used to update sprint detail logs in related
             release used in sprint """
-        for rec in self:
-            if vals.get("release_id", ""):
-                release_id = self.env["project.scrum.release"].browse(
-                    vals.get("release_id")
-                )
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Sprint Added by: <span> %s </span></li><li>
-                    Sprint Number: <span> %s </span></li>
-                    Sprint Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.sprint_number, rec.name)
-                )
-                release_id.message_post(body=msg)
+        if vals.get("release_id", ""):
+            for rec in self:
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
@@ -110,7 +97,20 @@ class ProjectScrumSprint(models.Model):
                     % (self.env.user.name, rec.sprint_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
-        return super(ProjectScrumSprint, self).write(vals)
+            res = super(ProjectScrumSprint, self).write(vals)
+            if vals.get("release_id", ""):
+                for rec in self:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Sprint Added by: <span> %s </span></li><li>
+                        Sprint Number: <span> %s </span></li>
+                        Sprint Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.sprint_number, rec.name)
+                    )
+                    rec.release_id.message_post(body=msg)
+        return res
 
     def unlink(self):
         """ This method used to manage logs in sprint when remove

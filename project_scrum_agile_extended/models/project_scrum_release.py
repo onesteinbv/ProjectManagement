@@ -44,6 +44,7 @@ class ProjectScrumRelease(models.Model):
             milestone planned hours """
         for release in self:
             total_m_h = 0
+            release.weightage = 0
             for rel in release.project_id.release_ids:
                 if not rel.sprint_ids:
                     total_m_h += rel.total_planned_hours_edit
@@ -97,19 +98,8 @@ class ProjectScrumRelease(models.Model):
     def write(self, vals):
         """ This method used to update release details in project
             used in release """
-        for rec in self:
-            if vals.get("project_id", ""):
-                project_id = self.env["project.project"].browse(vals.get("project_id"))
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Release Added by: <span> %s </span></li><li>
-                    Release Number: <span> %s </span></li>
-                    Release Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.release_number, rec.name)
-                )
-                project_id.message_post(body=msg)
+        if vals.get("project_id", ""):
+            for rec in self:
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
@@ -120,4 +110,17 @@ class ProjectScrumRelease(models.Model):
                     % (self.env.user.name, rec.release_number, rec.name)
                 )
                 rec.project_id.message_post(body=msg)
-        return super(ProjectScrumRelease, self).write(vals)
+            res = super(ProjectScrumRelease, self).write(vals)
+            if vals.get("project_id", ""):
+                for rec in self:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Release Added by: <span> %s </span></li><li>
+                        Release Number: <span> %s </span></li>
+                        Release Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.release_number, rec.name)
+                    )
+                    rec.project_id.message_post(body=msg)
+        return res

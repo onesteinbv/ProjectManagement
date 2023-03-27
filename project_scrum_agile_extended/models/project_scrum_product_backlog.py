@@ -112,22 +112,8 @@ class ProjectScrumProductBacklog(models.Model):
     def write(self, vals):
         """ This method is used to update logs of backlog details in release
             based on release detail update which used in backlog """
-        result = super(ProjectScrumProductBacklog, self).write(vals)
         if vals.get("release_id", ""):
             for rec in self:
-                release_id = self.env["project.scrum.release"].browse(
-                    vals.get("release_id")
-                )
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Added by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.backlog_number, rec.name)
-                )
-                release_id.message_post(body=msg)
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
@@ -138,7 +124,20 @@ class ProjectScrumProductBacklog(models.Model):
                     % (self.env.user.name, rec.backlog_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
-        return result
+            res = super(ProjectScrumProductBacklog, self).write(vals)
+            if vals.get("release_id", ""):
+                for rec in self:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Backlog Added by: <span> %s </span></li><li>
+                        Backlog Number: <span> %s </span></li>
+                        Backlog Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.backlog_number, rec.name)
+                    )
+                    rec.release_id.message_post(body=msg)
+        return res
 
     @api.model_create_multi
     def create(self, vals_lst):

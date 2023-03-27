@@ -322,6 +322,7 @@ class ProjectScrumSprint(models.Model):
         "Expected Hours",
         compute='_compute_hours',
         help='Expected hours to do the task.',
+        recursive=True
     )
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -930,7 +931,8 @@ class ProjectScrumProductBacklog(models.Model):
     task_hours = fields.Float(
         'Task Hours',
         compute='_compute_hours',
-        help='Estimated time of the total hours of the tasks'
+        help='Estimated time of the total hours of the tasks',
+        recursive=True
     )
     color = fields.Integer('Color Index')
     note = fields.Text('Internal Note', translate=True)
