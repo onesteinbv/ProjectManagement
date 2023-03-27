@@ -14,8 +14,8 @@ class SupplierLeaves(models.Model):
         """
         Compute the days Duration.
         """
-        leave_duration = 0
         for leaves in self:
+            leave_duration = 0
             if leaves.date_from and leaves.date_to:
                 leave_duration = 1 + (leaves.date_to - leaves.date_from).days
             leaves.leave_duration = leave_duration
@@ -23,12 +23,13 @@ class SupplierLeaves(models.Model):
     def _get_partner_domain(self):
         """
         Get the Partner domain to limit only
-        to a supplier compnay's resources.
+        to a supplier company's resources.
         """
-        domain = []
-        if self.env.user.supplier_company_id:
-            domain.append(("id", "in", self.env.user.supplier_company_id.child_ids.ids))
-        return domain
+        return (
+            [("id", "in", self.env.user.supplier_company_id.child_ids.ids)]
+            if self.env.user.supplier_company_id
+            else []
+        )
 
     parent_id = fields.Many2one(
         related="partner_id.parent_id", string="Related Company"
@@ -72,23 +73,15 @@ class SupplierLeaves(models.Model):
             ValidationError: If the Start date is greater the End date.
         """
         for supp_leaves in self:
-            if supp_leaves.date_to < supp_leaves.date_from:
+            date_to = supp_leaves.date_to
+            date_from = supp_leaves.date_from
+            if date_to < date_from:
                 raise ValidationError(_("End date must be greater than start date!"))
-
-    @api.constrains("date_from", "date_to")
-    def _check_leave_duration(self):
-        """
-        Check for the Overlapping record.
-
-        Raises:
-            ValidationError: if an overlapping record is found.
-        """
-        for leave in self:
             domain = [
-                ("date_from", "<=", leave.date_to),
-                ("date_to", ">=", leave.date_from),
-                ("partner_id", "=", leave.partner_id.id),
-                ("id", "!=", leave.id),
+                ("date_from", "<=", date_to),
+                ("date_to", ">=", date_from),
+                ("partner_id", "=", supp_leaves.partner_id.id),
+                ("id", "!=", supp_leaves.id),
             ]
             if self.search_count(domain):
                 raise ValidationError(
