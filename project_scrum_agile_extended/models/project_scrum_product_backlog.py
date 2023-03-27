@@ -124,19 +124,19 @@ class ProjectScrumProductBacklog(models.Model):
                     % (self.env.user.name, rec.backlog_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
-            res = super(ProjectScrumProductBacklog, self).write(vals)
-            if vals.get("release_id", ""):
-                for rec in self:
-                    msg = (
-                        _(
-                            """ <ul class="o_mail_thread_message_tracking">
-                        <li>Backlog Added by: <span> %s </span></li><li>
-                        Backlog Number: <span> %s </span></li>
-                        Backlog Name: <span> %s </span></li>"""
-                        )
-                        % (self.env.user.name, rec.backlog_number, rec.name)
+        res = super(ProjectScrumProductBacklog, self).write(vals)
+        if vals.get("release_id", ""):
+            for rec in self:
+                msg = (
+                    _(
+                        """ <ul class="o_mail_thread_message_tracking">
+                    <li>Backlog Added by: <span> %s </span></li><li>
+                    Backlog Number: <span> %s </span></li>
+                    Backlog Name: <span> %s </span></li>"""
                     )
-                    rec.release_id.message_post(body=msg)
+                    % (self.env.user.name, rec.backlog_number, rec.name)
+                )
+                rec.release_id.message_post(body=msg)
         return res
 
     @api.model_create_multi
