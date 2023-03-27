@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="user_supplier_leaves_access_rule" model="ir.rule">
+        <field name="name">Supplier Leave Access Rule</field>
+        <field
+            name="model_id"
+            ref="project_team_leave_management.model_supplier_leaves"
+        />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]"
+        />
+        <field
+            name="domain_force"
+        >[('partner_id', 'in', user.supplier_company_id.child_ids.ids)]</field>
+    </record>
+
+    <record id="supplier_leaves_team_member_rule" model="ir.rule">
+        <field name="name">Supplier Leave - Team Member Access Rule</field>
+        <field
+            name="model_id"
+            ref="project_team_leave_management.model_supplier_leaves"
+        />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_team_member'))]"
+        />
+        <field
+            name="domain_force"
+        >[('partner_id', 'in', user.supplier_company_id.child_ids.ids)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="supplier_leaves_team_member_rule_creater" model="ir.rule">
+        <field name="name">Supplier Leave - Team Member Access Rule</field>
+        <field
+            name="model_id"
+            ref="project_team_leave_management.model_supplier_leaves"
+        />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_team_member'))]"
+        />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
+    <record id="res_partner_team_member_rule" model="ir.rule">
+        <field name="name">Partner - Team Member Access Rule</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_team_member'))]"
+        />
+        <field
+            name="domain_force"
+        >[('id', 'in', user.supplier_company_id.child_ids.ids)]</field>
+    </record>
+
+</odoo>
