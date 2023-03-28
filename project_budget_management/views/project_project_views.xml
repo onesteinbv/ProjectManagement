@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="inherit_project_project_stage_view_tree" model="ir.ui.view">
+        <field name="name">inherit.project.project.stage.view.tree</field>
+        <field name="model">project.project.stage</field>
+        <field
+            name="inherit_id"
+            ref="project.project_project_stage_view_tree"
+        />
+        <field name="arch" type="xml">
+            <field name="fold" position="after">
+                <field name="is_close" />
+            </field>
+        </field>
+    </record>
+
+    <record id="inherit_view_project_project_form" model="ir.ui.view">
+        <field name="name">project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[2]" position="after">
+                <button
+                    string="Extend Project Finish Date"
+                    type="action"
+                    class="btn-primary"
+                    attrs="{'invisible':[('is_closing_stage','=', True)]}"
+                    groups="project.group_project_manager,base.group_system"
+                    name="%(action_project_extend_end_date_wizard)d"
+                />
+                <button
+                    string="Revise Project Budget"
+                    type="action"
+                    class="btn-primary"
+                    attrs="{'invisible':[('is_closing_stage','=', True)]}"
+                    groups="project.group_project_manager,base.group_system"
+                    name="%(action_project_revise_budget_wizard)d"
+                />
+            </xpath>
+            <field name="user_id" position="attributes">
+                <attribute
+                    name="groups"
+                >project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system</attribute>
+            </field>
+            <xpath expr="//page[@name='settings']/group[1]" position="inside">
+                <field name="is_closing_stage" />
+                <field name="assignee_id_editable" invisible="1" />
+            </xpath>
+            <field name="privacy_visibility" position="after">
+                <field name="favorite_user_ids" widget="many2many_tags" />
+            </field>
+            <xpath expr="//page[@name='settings']/group[1]" position="after">
+                <group
+                    name="custom"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                >
+                    <group string="Budget">
+                        <field
+                            name="actual_budget"
+                            attrs="{'readonly':[('assignee_id_editable', '=', False)]}"
+                        />
+                        <field name="spent_budget" />
+                        <field name="revised_budget" />
+                        <field name="budget_of_completion" />
+                    </group>
+                    <group string="Project Dates">
+                        <field name="date" />
+                        <field name="rev_date" />
+                        <field
+                            name="expected_end_date"
+                            attrs="{'readonly':[('is_closing_stage','=', True)]}"
+                        />
+                        <field name="projected_end_date" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page[@name='settings']" position="after">
+                <page
+                    string="Project Revisions"
+                    name="project_rev_dates"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                >
+                    <field name="project_rev_ids">
+                        <tree
+                            decoration-success="state=='approve'"
+                            decoration-danger="state == 'reject'"
+                        >
+                            <field name="create_uid" />
+                            <field name="create_date" />
+                            <field name="new_expected_end_date" />
+                            <field name="comment" />
+                            <field
+                                name="approval_reason"
+                                attrs="{'invisible':[('state','=', 'draft')]}"
+                            />
+                            <button
+                                type="action"
+                                name="%(project_approve_wiz_action_form)d"
+                                class="btn text-success"
+                                icon="fa-check"
+                                groups="project_management_security.group_cio,base.group_system"
+                                attrs="{'invisible':[('state', 'in', ('approve', 'reject'))]}"
+                                context="{'state': 'approve', 'extend_field': 'expected_end_date'}"
+                            />
+                            <button
+                                type="action"
+                                name="%(project_approve_wiz_action_form)d"
+                                class="btn text-danger"
+                                icon="fa-times"
+                                groups="project_management_security.group_cio,base.group_system"
+                                attrs="{'invisible':[('state', 'in', ('approve', 'reject'))]}"
+                                context="{'state': 'reject'}"
+                            />
+                            <field name="state" invisible="1" />
+                        </tree>
+                    </field>
+                </page>
+                <page
+                    string="Budget Revisions"
+                    name="project_rev_budget"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                >
+                    <field name="project_rev_budget_ids">
+                        <tree>
+                            <field
+                                name="create_uid"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="create_date"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="new_budget"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="comment"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="approved_by"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="approved_date"
+                                style="vertical-align: baseline;"
+                            />
+                            <field
+                                name="approval_reason"
+                                style="vertical-align: baseline;"
+                            />
+                            <button
+                                type="action"
+                                name="%(project_approve_wiz_action_form)d"
+                                class="btn text-success"
+                                style="vertical-align: baseline;"
+                                icon="fa-check"
+                                groups="project_management_security.group_cio,base.group_system"
+                                attrs="{'invisible':[('state', 'in', ('approve', 'reject'))]}"
+                                context="{'state': 'approve', 'extend_field': 'revised_budget'}"
+                            />
+                            <button
+                                type="action"
+                                name="%(project_approve_wiz_action_form)d"
+                                class="btn text-danger"
+                                style="vertical-align: baseline;"
+                                icon="fa-times"
+                                groups="project_management_security.group_cio,base.group_system"
+                                attrs="{'invisible':[('state', 'in', ('approve', 'reject'))]}"
+                                context="{'state': 'reject'}"
+                            />
+                            <field name="state" invisible="1" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_analysis_tree_view" model="ir.ui.view">
+        <field name="name">project.analysis.tree</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Analytic Account" />
+                <field name="date_start" />
+                <field name="date" />
+                <field name="expected_end_date" />
+                <field
+                    name="spent_budget"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                />
+                <field
+                    name="running_cost"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                />
+                <field
+                    name="actual_revised_budget"
+                    groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_project_project_report" model="ir.actions.act_window">
+        <field name="name">Project Analysis</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="view_id"
+            ref="project_budget_management.project_analysis_tree_view"
+        />
+    </record>
+
+    <menuitem
+        id="menu_project_report_project_analysis"
+        name="Project Analysis"
+        action="action_project_project_report"
+        parent="project.menu_project_report"
+        sequence="11"
+        groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,project_management_security.group_project_coordinator,project_management_security.group_team_member,base.group_system"
+    />
+
+</odoo>

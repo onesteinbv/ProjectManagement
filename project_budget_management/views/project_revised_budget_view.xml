@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="project_revised_budget_tree_view" model="ir.ui.view">
+        <field name="name">project.revised.budget.tree.view</field>
+        <field name="model">project.revised.budget</field>
+        <field name="arch" type="xml">
+            <tree
+                string="Budget Revisions"
+                create="0"
+                edit="0"
+                delete="0"
+                editable="top"
+            >
+                <field name="project_id" readonly="1" />
+                <field name="create_uid" readonly="1" />
+                <field name="create_date" readonly="1" />
+                <field
+                    name="prev_budget"
+                    string="Previous Budget"
+                    readonly="1"
+                />
+                <field name="new_budget" string="Revised Budget" readonly="1" />
+                <field name="comment" readonly="1" />
+                <field name="approved_by" readonly="1" />
+                <field name="approved_date" readonly="1" />
+                <field name="approval_reason" readonly="1" />
+                <field name="state" readonly="1" />
+                <button
+                    name="goto_project_rec"
+                    string="Go to the Project"
+                    type="object"
+                    icon="fa-arrow-right"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_revised_budget_view_search" model="ir.ui.view">
+        <field name="name">project.revised.budget.search</field>
+        <field name="model">project.revised.budget</field>
+        <field name="arch" type="xml">
+            <search string="Budget Revisions">
+                <field name="project_id" />
+                <field name="create_uid" />
+                <field name="state" />
+                <filter
+                    name="draft"
+                    string="Draft"
+                    domain="[('state','=','draft')]"
+                />
+                <group string="Group By">
+                    <filter
+                        name="groupby_project_id"
+                        string="Project"
+                        context="{'group_by':'project_id'}"
+                    />
+                    <filter
+                        name="groupby_create_uid"
+                        string="Changed By"
+                        context="{'group_by':'create_uid'}"
+                    />
+                    <filter
+                        name="groupby_state"
+                        string="State"
+                        context="{'group_by':'state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record
+        id="project_budget_revesion_action_view"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Budget Revisions</field>
+        <field name="res_model">project.revised.budget</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_draft': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_project_budget_revesion_report"
+        name="Budget Revisions"
+        action="project_budget_revesion_action_view"
+        parent="project.menu_project_report"
+        sequence="22"
+        groups="project_management_security.group_cio,project.group_project_manager,-project_management_security.group_supp_project_coordinator,project_management_security.group_project_coordinator,-project_management_security.group_team_member,base.group_system"
+    />
+    />
+
+</odoo>

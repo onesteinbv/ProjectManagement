@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_project_extend_end_date_wizard" model="ir.ui.view">
+        <field name="name">Extend Project Finish Date</field>
+        <field name="model">extend.end.date.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Order Confirmation">
+                <group>
+                    <field name="comment" />
+                </group>
+                <group>
+                    <field name="date" />
+                </group>
+                <footer>
+                    <button
+                        name="action_extend_date"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    or
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record
+        id="action_project_extend_end_date_wizard"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Extend Project Finish Date</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">extend.end.date.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_project_revise_budget_wizard" model="ir.ui.view">
+        <field name="name">Revise Project Budget</field>
+        <field name="model">revise.budget.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Revise Budget">
+                <group>
+                    <field name="amount" />
+                </group>
+                <group>
+                    <field name="comment" />
+                </group>
+                <footer>
+                    <button
+                        name="action_revise_budget"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    or
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record
+        id="action_project_revise_budget_wizard"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Revise Project Budget</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">revise.budget.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

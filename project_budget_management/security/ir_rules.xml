@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="mail_message_custom_team_member_rule" model="ir.rule">
+        <field name="name">Mail Message - Team Member Access Rule</field>
+        <field name="model_id" ref="mail.model_mail_message" />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_team_member'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('tracking_value_ids.field', 'not in', ('actual_budget', 'revised_budget', 'spent_budget')), ('tracking_value_ids', '=', False)]</field>
+    </record>
+
+    <record id="mail_message_custom_project_coordinator_rule" model="ir.rule">
+        <field
+            name="name"
+        >Mail Message - Canna Project Coordinator Access Rule</field>
+        <field name="model_id" ref="mail.model_mail_message" />
+        <field
+            name="groups"
+            eval="[(4, ref('project_management_security.group_supp_project_coordinator'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('tracking_value_ids.field', 'not in', ('actual_budget', 'revised_budget', 'spent_budget')), ('tracking_value_ids', '=', False)]</field>
+    </record>
+
+</odoo>
