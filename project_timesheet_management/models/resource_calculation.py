@@ -67,9 +67,7 @@ class ResourceCalculation(models.Model):
         """
         Calculate the Resource Amount on change of Resource.
         """
-        for rec in self:
-            if rec.resource_id:
-                rec.resource_amount = rec.resource_id.resource_amount or 0
+        self.resource_amount = self.resource_id.resource_amount if self.resource_id else 0
 
     @api.depends("worked_hours", "resource_amount")
     def _compute_total_amount(self):

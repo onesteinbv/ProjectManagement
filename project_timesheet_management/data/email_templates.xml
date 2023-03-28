@@ -35,7 +35,7 @@
                 <strong>Note </strong>:<t t-out="object.description or '-'"/>
                 <br />
                 <t t-set="website_url" t-value="object.sudo().get_timesheet_invoice_url()"></t>
-                <b><a t-att-href='website_url' t-out="website_url or ''" class="btn btn-primary">View Timesheet Invoice</a></b><br />
+                <b><a t-att-href='website_url' class="btn btn-primary">View Timesheet Invoice</a></b><br />
             </p>
             </div>
         </field>

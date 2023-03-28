@@ -2,13 +2,13 @@
 
 {
     "name": "Project Timesheet Management",
-    "version": "15.0.1.0.0",
+    "version": "15.0.1.1.1",
     "summary": "A Module adds features to the Project Timesheet Management.",
     "author": """Serpent Consulting Services Pvt. Ltd.""",
     "website": "http://www.serpentcs.com",
     "category": "Project Budget Management",
     "license": "LGPL-3",
-    "depends": ["project_scrum_agile", "project_management_security"],
+    "depends": ["project_scrum_agile"],
     "data": [
         "security/ir.model.access.csv",
         "security/ir_rules.xml",

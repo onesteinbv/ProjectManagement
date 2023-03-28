@@ -6,7 +6,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
 from werkzeug import urls
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class TimesheetInvoice(models.Model):
@@ -41,7 +40,8 @@ class TimesheetInvoice(models.Model):
                     line["total_amount"] = line["total_amount"] - amt_sum
         return res
 
-    @api.depends("resource_calculation_ids.worked_hours")
+    @api.depends("resource_calculation_ids.worked_hours",
+                 "resource_calculation_ids")
     def _compute_total_hours(self):
         """
         Compute the total hours.
@@ -104,10 +104,10 @@ class TimesheetInvoice(models.Model):
 
                 create_date = timesheet_inv.submit_date
                 if timesheet_inv.approved_on:
-                    completed_date = timesheet_inv.approved_on
+                    completed_date = timesheet_inv.approved_on.date()
                 else:
                     completed_date = timesheet_inv.completed_date
-                diff = completed_date.date() - create_date
+                diff = completed_date - create_date
                 timesheet_inv.timesheet_inv_age = diff.days if diff.days > 0 else 0
 
             elif timesheet_inv.create_date:
@@ -257,6 +257,7 @@ class TimesheetInvoice(models.Model):
         Generate Timesheet Invoice URL
         """
         self.ensure_one()
+        invoice_url = " "
         try:
             base_url = self.env["ir.config_parameter"].get_param("web.base.url")
             invoice_url = urls.url_join(
@@ -283,16 +284,14 @@ class TimesheetInvoice(models.Model):
         for invoice in self:
             invoice.write({"state": "confirm"})
             if mail_template:
-                email_from = self.env.user.email
-                email_to = invoice.project_id.user_id.email or ''
-                reply_to = self.env.user.email
-                mail_template.write({'email_from': email_from,
-                                     'email_to': email_to,
-                                     'reply_to': reply_to})
+                email_values = {
+                    "email_from": self.env.user.email,
+                    "email_to": invoice.project_id.user_id.email or ''
+                }
                 state = dict(invoice.fields_get(
                     allfields=['state'])['state']['selection'])[invoice.state]
                 mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True
+                    invoice.id, force_send=True, email_values=email_values
                 )
 
     def button_pre_approve(self):
@@ -313,16 +312,14 @@ class TimesheetInvoice(models.Model):
                 }
             )
             if mail_template:
-                email_from = self.env.user.email
-                email_to = invoice.project_id.product_owner_id.email or ''
-                reply_to = self.env.user.email
+                email_values = {
+                    "email_from": self.env.user.email,
+                    "email_to": invoice.project_id.product_owner_id.email or ''
+                }
                 state = dict(invoice.fields_get(
                     allfields=['state'])['state']['selection'])[invoice.state]
-                mail_template.write({'email_from': email_from,
-                                     'email_to': email_to,
-                                     'reply_to': email_from})
                 mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True
+                    invoice.id, force_send=True, email_values=email_values
                 )
 
     def button_approve(self):
@@ -352,16 +349,12 @@ class TimesheetInvoice(models.Model):
                     allfields=['state'])['state']['selection'])[invoice.state]
             # Mail to project manager
             if mail_template:
-                email_from = invoice.project_id.product_owner_id.email or ''
-                email_to = invoice.project_id.user_id.email or ''
-                reply_to = invoice.project_id.product_owner_id.email or ''
-                mail_template.write({
-                    'email_from': email_from,
-                    'email_to': email_to,
-                    'reply_to': reply_to,
-                    })
+                email_values = {
+                    "email_from": invoice.project_id.product_owner_id.email or '',
+                    "email_to": invoice.project_id.user_id.email or ''
+                }
                 mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True
+                    invoice.id, force_send=True, email_values=email_values
                 )
 
     #             # IT Manager
@@ -372,14 +365,14 @@ class TimesheetInvoice(models.Model):
                     'user_ids').filtered(
                         lambda user: user.has_group(it_manager) and
                     user.id != invoice.project_id.user_id.id)
-    
+
                 for user_id in it_user_ids:
-                    mail_template.write({
+                    email_values.update({
                         'email_to': user_id.email or '',
                         'email_from': self.env.user.email or '',
-                        'reply_to': user_id.email or ''})
+                    })
                     mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True)
+                    invoice.id, force_send=True, email_values=email_values)
 
     #             # Finance controller
                 u_lst = it_user_ids.ids
@@ -390,14 +383,14 @@ class TimesheetInvoice(models.Model):
                     'user_ids').filtered(
                         lambda user: user.has_group(finance_controller) and
                     (user.id not in u_lst))
-    
+
                 for user_id in fc_user_ids:
-                    mail_template.write({
+                    email_values.update({
                         'email_to': user_id.email or '',
                         'email_from': self.env.user.email or '',
-                        'reply_to': user_id.email or ''})
+                    })
                     mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True)
+                    invoice.id, force_send=True, email_values=email_values)
 
     #             supplier project coordinator
                 u_lst += fc_user_ids.ids
@@ -413,14 +406,14 @@ class TimesheetInvoice(models.Model):
                             ) and (
                                 user.partner_id == invoice.partner_id or
                                 user.supplier_company_id == invoice.partner_id))
-    
+
                 for user_id in user_ids:
-                    mail_template.write({
+                    email_values.update({
                         'email_to': user_id.email or '',
                         'email_from': self.env.user.email or '',
-                        'reply_to': user_id.email or ''})
+                    })
                     mail_template.sudo().with_context(state=state).send_mail(
-                    invoice.id, force_send=True)
+                    invoice.id, force_send=True, email_values=email_values)
 
     def button_completed(self):
         """
@@ -433,6 +426,10 @@ class TimesheetInvoice(models.Model):
         author_id = (
             self.env["res.users"].sudo().browse(request.session.uid).partner_id.id
         )
+        email_values = {
+            "email_from": self.env.user.email or self.env.user.partner_id.email,
+            "author_id": author_id or False
+        }
         for timesheet_inv in self:
             timesheet_inv.with_context(from_approval=True).sudo().write(
                 {
@@ -443,14 +440,12 @@ class TimesheetInvoice(models.Model):
             )
             state = dict(timesheet_inv.fields_get(
                     allfields=['state'])['state']['selection'])[timesheet_inv.state]
-            mail_template.write({
-                'email_to': timesheet_inv.project_id.product_owner_id.email or '',
-                'reply_to': timesheet_inv.project_id.product_owner_id.email or '',
-                'email_from': self.env.user.email or self.env.user.partner_id.email,
-                })
+            email_values.update({
+                "email_to": timesheet_inv.project_id.product_owner_id.email or '',
+            })
             mail_template.sudo().with_context(state=state).send_mail(
-                    timesheet_inv.id,force_send=True,
-                    email_values={"author_id": author_id or False})
+                    timesheet_inv.id, force_send=True,
+                    email_values=email_values)
 
             # supplier project coordinator
             project_id = timesheet_inv.sudo().project_id
@@ -471,13 +466,12 @@ class TimesheetInvoice(models.Model):
             )
 
             for user_id in user_ids:
-                mail_template.write({
-                    "email_to": user_id.email or "",
-                    "email_from": self.env.user.email or self.env.user.partner_id.email,
-                    'reply_to': user_id.email or "",})
+                email_values.update({
+                    "email_to": user_id.email or '',
+                })
                 mail_template.sudo().with_context(state=state).send_mail(
                         timesheet_inv.id, force_send=True,
-                        email_values={"author_id": author_id or False})
+                        email_values=email_values)
 
             # IT Manager
             u_lst = user_ids.ids
@@ -489,14 +483,12 @@ class TimesheetInvoice(models.Model):
             )
 
             for user_id in it_user_ids:
-                mail_template.write(
-                    {"email_to": user_id.email or "",
-                     "reply_to": user_id.email or "",
-                     "email_from": self.env.user.email or self.env.user.partner_id.email,}
-                )
+                email_values.update({
+                    "email_to": user_id.email or '',
+                })
                 mail_template.sudo().with_context(state=state).send_mail(
                         timesheet_inv.id, force_send=True,
-                        email_values={"author_id": author_id or False})
+                        email_values=email_values)
 
     def write(self, vals):
         """
@@ -507,6 +499,7 @@ class TimesheetInvoice(models.Model):
         """
         res = super(TimesheetInvoice, self).write(vals)
         user_obj = self.env["res.users"]
+        author_id = user_obj.sudo().browse(request.session.uid).partner_id.id
         for timesheet_invoice in self:
             if (
                 timesheet_invoice.document_type == "timesheet"
@@ -520,9 +513,7 @@ class TimesheetInvoice(models.Model):
             if self._context.get("from_approval", False):
                 next(iter(timesheet_invoice.message_ids)).write(
                     {
-                        "author_id": user_obj.sudo()
-                            .browse(request.session.uid)
-                            .partner_id.id
+                        "author_id": author_id
                     }
                 )
         return res
@@ -537,6 +528,7 @@ class TimesheetInvoice(models.Model):
         po_group = 'project_management_security.group_project_coordinator'
         mail_template = self.env.ref(
             'project_timesheet_management.email_timesheet_invoice_confirmed')
+        mail_state = 'Uploaded'
         for timesheet_invoice in res:
             if timesheet_invoice.document_type == "timesheet":
                 total_amount = sum(
@@ -548,14 +540,13 @@ class TimesheetInvoice(models.Model):
                     lambda user: user.has_group(po_group)) or \
                     timesheet_invoice.project_id.resource_ids.mapped(
                         'user_ids').filtered(lambda user: user.has_group(po_group))
-                mail_state = 'Uploaded'
                 for user_id in user_ids:
-                    mail_template.write({
+                    email_values = {
                         'email_to': user_id.email or '',
                         'email_from': self.env.user.email or '',
-                        'reply_to': user_id.email or ''})
+                    }
                     mail_template.sudo().with_context(state=mail_state).send_mail(
-                        timesheet_invoice.id, force_send=True)
+                        timesheet_invoice.id, force_send=True, email_values=email_values)
         return res
 
     def button_rejected(self):
@@ -573,26 +564,28 @@ class TimesheetInvoice(models.Model):
         author_id = (
             self.env["res.users"].sudo().browse(request.session.uid).partner_id.id
         )
+        email_values = {
+            'email_from': self.env.user.email or self.env.user.partner_id.email,
+            "author_id": author_id or False
+        }
+        mail_status = 'Rejected'
         for timesheet_inv in self:
             u_lst = []
-            mail_status = 'Rejected'
             if timesheet_inv.state == "pre-approved":
-                mail_template.write({
-                    'email_from': self.env.user.email or self.env.user.partner_id.email,
+                email_values.update({
                     'email_to': timesheet_inv.project_id.user_id.email or '',
-                    'reply_to': self.env.user.email or self.env.user.partner_id.email})
+                })
                 mail_template.sudo().with_context(state=mail_status).send_mail(
                     timesheet_inv.id, force_send=True,
-                    email_values={"author_id": author_id or False})
+                    email_values=email_values)
                 u_lst = [timesheet_inv.project_id.user_id.id]
             elif timesheet_inv.state == "confirm":
-                mail_template.write({
-                    'email_from': self.env.user.email or self.env.user.partner_id.email,
+                email_values.update({
                     'email_to': timesheet_inv.pre_approved_by.email or '',
-                    'reply_to': self.env.user.email or self.env.user.partner_id.email})
+                })
                 mail_template.sudo().with_context(state=mail_status).send_mail(
                     timesheet_inv.id, force_send=True,
-                    email_values={"author_id": author_id or False})
+                    email_values=email_values)
                 u_lst = [timesheet_inv.pre_approved_by.id]
             timesheet_inv.with_context(from_approval=True).sudo().write(
                 {"state": "rejected"}
@@ -603,13 +596,12 @@ class TimesheetInvoice(models.Model):
                 timesheet_inv.project_id.user_id.id not in u_lst
                 and timesheet_inv.project_id.product_owner_id.id == self.env.user.id
             ):
-                mail_template.write({
-                    'email_from': self.env.user.email or self.env.user.partner_id.email,
+                email_values.update({
                     'email_to': timesheet_inv.project_id.user_id.email or '',
-                    'reply_to': self.env.user.email or self.env.user.partner_id.email})
+                })
                 mail_template.sudo().with_context(state=mail_status).send_mail(
                     timesheet_inv.id, force_send=True,
-                    email_values={"author_id": author_id or False})
+                    email_values=email_values)
 
             # Supplier Project Coordinator
             user_ids = timesheet_inv.project_id.favorite_user_ids.filtered(
@@ -623,15 +615,14 @@ class TimesheetInvoice(models.Model):
                 user.id not in u_lst and (
                     user.partner_id == timesheet_inv.partner_id or
                     user.supplier_company_id == timesheet_inv.partner_id))
-    
+
             for user_id in user_ids:
-                mail_template.write({
+                email_values.update({
                     'email_to': user_id.email or '',
-                    'email_from': self.env.user.email or self.env.user.partner_id.email,
-                    'reply_to': self.env.user.email or self.env.user.partner_id.email,})
+                })
                 mail_template.sudo().with_context(state=mail_status).send_mail(
                     timesheet_inv.id, force_send=True,
-                    email_values={'author_id': author_id or False})
+                    email_values=email_values)
 
             # Canna Project Coordinator
             u_lst += user_ids.ids
@@ -643,13 +634,12 @@ class TimesheetInvoice(models.Model):
                     lambda user: user.has_group(
                         cann_po_group) and user.id not in u_lst)
             for user_id in c_user_ids:
-                mail_template.write({
+                email_values.update({
                     'email_to': user_id.email or '',
-                    'email_from': self.env.user.email or self.env.user.partner_id.email,
-                    'reply_to': self.env.user.email or self.env.user.partner_id.email,})
+                })
                 mail_template.sudo().with_context(state=mail_status).send_mail(
                     timesheet_inv.id, force_send=True,
-                    email_values={'author_id': author_id or False})
+                    email_values=email_values)
 
     def unlink(self):
         """
@@ -683,8 +673,9 @@ class TimesheetInvoice(models.Model):
             UserError: If the project exceeds the Revised Budget
             UserError: If the project exceeds the Actual Budget
         """
+        timesheet_inv_obj = self.env["timesheet.invoice"]
         for rec in self:
-            project_invoices = self.env["timesheet.invoice"].search(
+            project_invoices = timesheet_inv_obj.search(
                 [
                     ("project_id", "=", rec.project_id.id),
                     ("state", "in", ("approved", "completed")),
