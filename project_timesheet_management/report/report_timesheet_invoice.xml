@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="custom_inherit_external_bg_layout"
+        inherit_id="web.external_layout_striped"
+    >
+        <xpath expr="//div[hasclass('company_address')]" position="replace" />
+    </template>
+    <template
+        id="custom_inherit_external_bxd_layout"
+        inherit_id="web.external_layout_boxed"
+    >
+        <xpath expr='//div[@name="company_address"]' position="replace" />
+    </template>
+    <template
+        id="custom_inherit_external_clean_layout"
+        inherit_id="web.external_layout_bold"
+    >
+        <xpath expr='//div[@name="company_address"]' position="replace" />
+    </template>
+    <template
+        id="custom_inherit_external_std_layout"
+        inherit_id="web.external_layout_standard"
+    >
+        <xpath expr='//div[@name="company_address"]' position="replace" />
+    </template>
+
+    <template id="report_timesheet_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div style="display: flex; flex-wrap: wrap;">
+                            <div style="width: 50%; float: left;">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="partner_id"
+                                                >Supplier</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="partner_id"
+                                                >
+                                                    <t
+                                                        t-esc="doc.partner_id.name"
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="project_id"
+                                                >Project</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="project_id"
+                                                >
+                                                    <t
+                                                        t-esc="doc.project_id.name"
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="ref_no"
+                                                >Reference No.</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="ref_no"
+                                                >
+                                                    <t
+                                                        t-if="doc.ref_no"
+                                                        t-esc="doc.ref_no"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="create_uid"
+                                                >Created by.</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="create_uid"
+                                                >
+                                                    <t
+                                                        t-if="doc.create_uid"
+                                                        t-esc="doc.create_uid.name"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="pre_approved_by"
+                                                >Pre Approved By</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="pre_approved_by"
+                                                >
+                                                    <t
+                                                        t-if="doc.pre_approved_by"
+                                                        t-esc="doc.pre_approved_by.name"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="approved_by"
+                                                >Approved By</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="approved_by"
+                                                >
+                                                    <t
+                                                        t-if="doc.approved_by"
+                                                        t-esc="doc.approved_by.name"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="completed_by"
+                                                >Completed By</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="completed_by"
+                                                >
+                                                    <t
+                                                        t-if="doc.completed_by"
+                                                        t-esc="doc.completed_by.name"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="width: 50%;float: right;">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="submit_date"
+                                                >Submit Date</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="submit_date"
+                                                >
+                                                    <t
+                                                        t-esc="doc.submit_date"
+                                                        t-options="{'widget': 'date'}"
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="date_due"
+                                                >Due Date</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="date_due"
+                                                >
+                                                    <t
+                                                        t-esc="doc.date_due"
+                                                        t-options="{'widget': 'date'}"
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="document_type"
+                                                >Document Type</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="document_type"
+                                                    style="text-transform: capitalize;"
+                                                >
+                                                    <t
+                                                        t-if="doc.document_type"
+                                                        t-esc="doc.document_type"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="timesheet_inv_age"
+                                                >Aging</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="timesheet_inv_age"
+                                                    style="text-transform: capitalize;"
+                                                >
+                                                    <t
+                                                        t-if="doc.timesheet_inv_age"
+                                                        t-esc="doc.timesheet_inv_age"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="pre_approved_on"
+                                                >Pre-Approved on</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="pre_approved_on"
+                                                >
+                                                    <t
+                                                        t-if="doc.pre_approved_on"
+                                                        t-esc="doc.pre_approved_on"
+                                                        t-options="{'widget': 'datetime'}"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="approved_on"
+                                                >Approved On</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="approved_on"
+                                                >
+                                                    <t
+                                                        t-if="doc.approved_on"
+                                                        t-esc="doc.approved_on"
+                                                        t-options="{'widget': 'datetime'}"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="completed_date"
+                                                >Completed On</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="completed_date"
+                                                >
+                                                    <t
+                                                        t-if="doc.completed_date"
+                                                        t-esc="doc.completed_date"
+                                                        t-options="{'widget': 'date'}"
+                                                    />
+                                                    <t t-else="">
+                                                        --
+                                                    </t>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="width: 100%; float: left;">
+                                <div
+                                    style="color: #7c7bad; font-weight: bold; font-size: 20px; margin: 5px 0;"
+                                >
+                                    Total Amount/Hours
+                                </div>
+                            </div>
+                            <div style="width: 50%; float: left;">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="total_amount"
+                                                >Total Amount</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="total_amount"
+                                                >
+                                                    <t
+                                                        t-esc="doc.total_amount"
+                                                        t-options='{"widget": "float", "precision": 2}'
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="width: 50%;float: right;">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                style="border: none;"
+                                                class="o_td_label"
+                                            >
+                                                <label
+                                                    class="o_form_label o_readonly_modifier o_required_modifier"
+                                                    for="total_hours"
+                                                >Total Hours</label>
+                                            </td>
+                                            <td style="border: none;">
+                                                <span
+                                                    class="o_field_widget o_readonly_modifier o_required_modifier"
+                                                    id="total_hours"
+                                                >
+                                                    <t
+                                                        t-esc="doc.total_hours"
+                                                        t-options='{"widget": "float_time", "precision": 2}'
+                                                    />
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="width: 100%; float: left;">
+                                <div
+                                    style="color: #7c7bad; font-weight: bold; font-size: 20px; margin: 5px 0;"
+                                >
+                                    Resource Calculation
+                                </div>
+                            </div>
+                            <div style="width: 100%; float: left;">
+                                <div
+                                    class="o_field_one2many o_field_widget o_field_x2many o_field_x2many_list o_readonly_modifier"
+                                    name="resource_calculation_ids"
+                                >
+                                    <div class="table-responsive">
+                                        <table
+                                            class="o_list_view table table-condensed table-striped o_list_view_ungrouped"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th>Resource</th>
+                                                    <th
+                                                        style="text-align: right;"
+                                                    >Resource Amount</th>
+                                                    <th
+                                                        style="text-align: right;"
+                                                    >Worked Hours</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ui-sortable">
+                                                <t
+                                                    t-foreach="doc.resource_calculation_ids"
+                                                    t-as="resource"
+                                                >
+                                                    <tr>
+                                                        <td>
+                                                            <t
+                                                                t-esc="resource.resource_id.name"
+                                                            />
+                                                        </td>
+                                                        <td
+                                                            style="text-align: right;"
+                                                        >
+                                                            <t
+                                                                t-esc="resource.resource_amount"
+                                                                t-options='{"widget": "float", "precision": 2}'
+                                                            />
+                                                        </td>
+                                                        <td
+                                                            style="text-align: right;"
+                                                        >
+                                                            <t
+                                                                t-esc="resource.worked_hours"
+                                                                t-options='{"widget": "float_time", "precision": 2}'
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td />
+                                                    <td />
+                                                    <td />
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 100%; float: left;">
+                                <div
+                                    style="color: #7c7bad; font-weight: bold; font-size: 20px; margin: 5px 0;"
+                                >
+                                    Note
+                                </div>
+                                <p>
+                                    <t t-esc="doc.description" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_timesheet_invoice" model="ir.actions.report">
+        <field name="name">Timesheet Invoice</field>
+         <field name="model">timesheet.invoice</field>
+         <field name="report_type">qweb-pdf</field>
+         <field name="print_report_name">(object.ref_no)</field>
+         <field
+            name="report_name"
+        >project_timesheet_management.report_timesheet_invoice</field>
+         <field
+            name="report_file"
+        >project_timesheet_management.report_timesheet_invoice</field>
+    </record>
+
+</odoo>

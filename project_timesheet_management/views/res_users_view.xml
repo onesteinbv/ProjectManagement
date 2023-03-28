@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit Form view -->
+    <record id="inherit_res_users_form_partner" model="ir.ui.view">
+        <field name="name">inherit.res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+            <group>
+                <field name="supplier_company_id"
+                context="{'default_customer':0, 'default_supplier': 1, 'search_default_supplier':1, 'default_company_type': 'company','default_is_company': 1}"
+                />
+            </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
