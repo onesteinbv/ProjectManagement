@@ -1,0 +1,13 @@
+web/web_environment_ribbon
+agreement/agreement
+agreement_extended
+helpdesk/helpdesk_mgmt_project
+project/project_task_default_stage
+project_budget_management
+project_management_security
+project_scrum_agile
+project_scrum_agile_extended
+project_team_leave_management
+project_timesheet_management
+management_dashboard
+theme_onestein
