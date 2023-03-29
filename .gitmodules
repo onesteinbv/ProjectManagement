@@ -10,3 +10,7 @@
 	path = helpdesk
 	url = https://github.com/OCA/helpdesk.git
 	branch = 15.0
+[submodule "web"]
+	path = web
+	url = https://github.com/OCA/web.git
+	branch = 15.0
