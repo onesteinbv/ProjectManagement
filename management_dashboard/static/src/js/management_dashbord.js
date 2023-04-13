@@ -14,13 +14,13 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
     var PMDashboardView = AbstractAction.extend({
 
         jsLibs: [
-            '/management_dashboard/static/lib/js/datatables.js',
-            '/management_dashboard/static/lib/js/gantt.js',
-            '/management_dashboard/static/lib/js/Chart.min.js',
+            '/management_dashboard/static/src/lib/js/datatables.js',
+            '/management_dashboard/static/src/lib/js/gantt.js',
+            '/management_dashboard/static/src/lib/js/Chart.min.js',
         ],
         cssLibs: [
-            '/management_dashboard/static/lib/css/datatables.css',
-            '/management_dashboard/static/lib/css/gantt.css',
+            '/management_dashboard/static/src/lib/css/datatables.css',
+            '/management_dashboard/static/src/lib/css/gantt.css',
         ],
 
         events: {
