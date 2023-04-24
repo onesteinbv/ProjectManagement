@@ -123,7 +123,8 @@ class ProjectScrumProductBacklog(models.Model):
                     )
                     % (self.env.user.name, rec.backlog_number, rec.name)
                 )
-                rec.release_id.message_post(body=msg)
+                if rec.release_id:
+                    rec.release_id.message_post(body=msg)
         res = super(ProjectScrumProductBacklog, self).write(vals)
         if vals.get("release_id", ""):
             for rec in self:
@@ -136,7 +137,8 @@ class ProjectScrumProductBacklog(models.Model):
                     )
                     % (self.env.user.name, rec.backlog_number, rec.name)
                 )
-                rec.release_id.message_post(body=msg)
+                if rec.release_id:
+                    rec.release_id.message_post(body=msg)
         return res
 
     @api.model_create_multi
@@ -157,7 +159,8 @@ class ProjectScrumProductBacklog(models.Model):
                     )
                     % (self.env.user.name, result.backlog_number, result.name)
                 )
-                result.release_id.message_post(body=msg)
+                if result.release_id:
+                    result.release_id.message_post(body=msg)
         return result
 
     def unlink(self):
@@ -173,5 +176,6 @@ class ProjectScrumProductBacklog(models.Model):
                 )
                 % (self.env.user.name, rec.backlog_number, rec.name)
             )
-            rec.release_id.message_post(body=msg)
+            if rec.release_id:
+                rec.release_id.message_post(body=msg)
         return super(ProjectScrumProductBacklog, self).unlink()

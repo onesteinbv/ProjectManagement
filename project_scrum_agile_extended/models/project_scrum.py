@@ -79,7 +79,8 @@ class ProjectScrumSprint(models.Model):
                 )
                 % (self.env.user.name, result.sprint_number, result.name)
             )
-            result.release_id.message_post(body=msg)
+            if result.release_id:
+                result.release_id.message_post(body=msg)
         return result
 
     def write(self, vals):
@@ -96,7 +97,8 @@ class ProjectScrumSprint(models.Model):
                     )
                     % (self.env.user.name, rec.sprint_number, rec.name)
                 )
-                rec.release_id.message_post(body=msg)
+                if rec.release_id:
+                    rec.release_id.message_post(body=msg)
         res = super(ProjectScrumSprint, self).write(vals)
         if vals.get("release_id", ""):
             for rec in self:
@@ -109,7 +111,8 @@ class ProjectScrumSprint(models.Model):
                     )
                     % (self.env.user.name, rec.sprint_number, rec.name)
                 )
-                rec.release_id.message_post(body=msg)
+                if rec.release_id:
+                    rec.release_id.message_post(body=msg)
         return res
 
     def unlink(self):
@@ -125,5 +128,6 @@ class ProjectScrumSprint(models.Model):
                 )
                 % (self.env.user.name, rec.sprint_number, rec.name)
             )
-            rec.release_id.message_post(body=msg)
+            if rec.release_id:
+                rec.release_id.message_post(body=msg)
         return super(ProjectScrumSprint, self).unlink()

@@ -93,7 +93,8 @@ class ProjectScrumRelease(models.Model):
                 )
                 % (self.env.user.name, result.release_number, result.name)
             )
-            result.project_id.message_post(body=msg)
+            if result.project_id:
+                result.project_id.message_post(body=msg)
         return result
 
     def write(self, vals):
@@ -110,7 +111,8 @@ class ProjectScrumRelease(models.Model):
                     )
                     % (self.env.user.name, rec.release_number, rec.name)
                 )
-                rec.project_id.message_post(body=msg)
+                if rec.project_id:
+                    rec.project_id.message_post(body=msg)
         res = super(ProjectScrumRelease, self).write(vals)
         if vals.get("project_id", ""):
             for rec in self:
@@ -123,5 +125,6 @@ class ProjectScrumRelease(models.Model):
                     )
                     % (self.env.user.name, rec.release_number, rec.name)
                 )
-                rec.project_id.message_post(body=msg)
+                if rec.project_id:
+                    rec.project_id.message_post(body=msg)
         return res
