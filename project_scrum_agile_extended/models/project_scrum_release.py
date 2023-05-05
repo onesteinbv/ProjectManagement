@@ -84,16 +84,16 @@ class ProjectScrumRelease(models.Model):
             project used in release """
         result = super(ProjectScrumRelease, self).create(vals)
         if vals.get("project_id", ""):
-            msg = (
-                _(
-                    """ <ul class="o_mail_thread_message_tracking">
-                <li>Release Added by: <span> %s </span></li><li>
-                Release Number: <span> %s </span></li>
-                Release Name: <span> %s </span></li>"""
-                )
-                % (self.env.user.name, result.release_number, result.name)
-            )
             if result.project_id:
+                msg = (
+                    _(
+                        """ <ul class="o_mail_thread_message_tracking">
+                    <li>Release Added by: <span> %s </span></li><li>
+                    Release Number: <span> %s </span></li>
+                    Release Name: <span> %s </span></li>"""
+                    )
+                    % (self.env.user.name, result.release_number, result.name)
+                )
                 result.project_id.message_post(body=msg)
         return result
 
@@ -102,29 +102,29 @@ class ProjectScrumRelease(models.Model):
             used in release """
         if vals.get("project_id", ""):
             for rec in self:
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Release Removed by: <span> %s </span></li><li>
-                    Release Number: <span> %s </span></li>
-                    Release Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.release_number, rec.name)
-                )
                 if rec.project_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Release Removed by: <span> %s </span></li><li>
+                        Release Number: <span> %s </span></li>
+                        Release Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.release_number, rec.name)
+                    )
                     rec.project_id.message_post(body=msg)
         res = super(ProjectScrumRelease, self).write(vals)
         if vals.get("project_id", ""):
             for rec in self:
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Release Added by: <span> %s </span></li><li>
-                    Release Number: <span> %s </span></li>
-                    Release Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.release_number, rec.name)
-                )
                 if rec.project_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Release Added by: <span> %s </span></li><li>
+                        Release Number: <span> %s </span></li>
+                        Release Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.release_number, rec.name)
+                    )
                     rec.project_id.message_post(body=msg)
         return res
