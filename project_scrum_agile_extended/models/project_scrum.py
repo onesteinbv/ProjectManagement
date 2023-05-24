@@ -64,6 +64,9 @@ class ProjectScrumSprint(models.Model):
     estimate_adjustment = fields.Float()
     weightage = fields.Float(compute="_compute_hours")
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
+
     @api.model
     def create(self, vals):
         """ This method used to add sprint details log in related
