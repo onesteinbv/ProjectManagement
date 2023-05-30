@@ -70,13 +70,16 @@ class ProjectScrumRelease(models.Model):
     )
     total_planned_hours = fields.Float(
         compute="_compute_hours",
-        string="Milestone Planned Hours",
+        string="Milestone Planned Hour",
         help="Estimated time to do the sprints.",
     )
     total_planned_hours_edit = fields.Float(
         string="Milestone Planned Hours", help="Estimated time to do the sprints.",
     )
     weightage = fields.Float(compute="_compute_weightage")
+
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
 
     @api.model
     def create(self, vals):

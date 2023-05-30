@@ -55,7 +55,8 @@ class ProjectProject(models.Model):
     )
     actual_hours = fields.Float(copy=False, tracking=True)
     percentage_completed = fields.Float(copy=False, tracking=True)
-    overall_progress = fields.Float(compute="_compute_overall_progress", tracking=True)
+    overall_progress = fields.Float(compute="_compute_overall_progress", tracking=True,
+                                    string="Progress")
     closed_hours = fields.Float(compute="_compute_closed_hours", tracking=True)
     total_planned_hours = fields.Float(
         compute="_compute_hours",

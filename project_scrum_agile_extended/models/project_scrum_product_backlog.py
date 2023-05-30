@@ -109,6 +109,9 @@ class ProjectScrumProductBacklog(models.Model):
         "Author Editable", compute="_compute_author_id_editable", store=False
     )
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
+
     def write(self, vals):
         """ This method is used to update logs of backlog details in release
             based on release detail update which used in backlog """

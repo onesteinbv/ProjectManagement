@@ -84,9 +84,13 @@ class ProjectTask(models.Model):
     weightage = fields.Float(compute="_compute_hours_get")
     schedule_date = fields.Datetime(help="Date scheduled for task")
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
+
     @api.model
     def create(self, vals):
         result = super(ProjectTask, self).create(vals)
         if result.manager_id:
             result.message_unsubscribe(partner_ids=[result.manager_id.id])
         return result
+
