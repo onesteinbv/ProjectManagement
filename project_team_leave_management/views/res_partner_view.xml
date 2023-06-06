@@ -64,7 +64,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('parent_id', '=', False)]</field>
+        <field name="domain">[('parent_id', '=', False),('supplier_rank','>=',1)]</field>
         <!-- <field name="domain">[('supplier_rank','>',0), ('parent_id', '=', False)]</field> -->
         <field
             name="context"
