@@ -61,7 +61,8 @@
                         <group>
                             <field
                                 name="partner_id"
-                                context="{'default_customer':0, 'default_supplier': 1, 'search_default_supplier':1, 'default_company_type': 'company','default_is_company': 1}"
+                                domain="[('supplier_rank','>',0),('parent_id', '=', False)]"
+                                context="{'default_supplier_rank': 1, 'search_default_supplier':1, 'default_company_type': 'company','default_is_company': 1,'res_partner_search_mode': 'supplier'}"
                                 options="{'no_create': True}"
                             />
                             <field
