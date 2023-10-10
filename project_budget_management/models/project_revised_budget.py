@@ -40,7 +40,7 @@ class ProjectRevisedBudget(models.Model):
                             line["prev_budget"] = rec.new_budget
         return res
 
-    @api.depends("project_id")
+    @api.depends("project_id", "project_id.revised_budget", "project_id.actual_budget")
     def _compute_prev_budget(self):
         for budget_revision in self:
             if budget_revision.project_id:

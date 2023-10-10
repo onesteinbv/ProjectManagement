@@ -15,10 +15,8 @@ class SupplierLeaves(models.Model):
         Compute the days Duration.
         """
         for leaves in self:
-            leave_duration = 0
-            if leaves.date_from and leaves.date_to:
-                leave_duration = 1 + (leaves.date_to - leaves.date_from).days
-            leaves.leave_duration = leave_duration
+            leaves.leave_duration = 1 + (
+                        leaves.date_to - leaves.date_from).days if leaves.date_from and leaves.date_to else 0.0
 
     def _get_partner_domain(self):
         """
@@ -85,5 +83,5 @@ class SupplierLeaves(models.Model):
             ]
             if self.search_count(domain):
                 raise ValidationError(
-                    _("You can not have 2 leaves that overlaps on same day!")
+                    _("You can not have leaves that overlap!")
                 )

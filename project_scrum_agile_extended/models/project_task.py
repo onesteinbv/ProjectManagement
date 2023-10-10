@@ -7,15 +7,16 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     @api.depends(
-        "stage_id",
+        "timesheet_ids",
         "timesheet_ids.unit_amount",
         "estimate_adjustment",
         "planned_hours",
-        "child_ids.timesheet_ids.unit_amount",
+        "child_ids",
         "child_ids.planned_hours",
         "child_ids.effective_hours",
         "child_ids.subtask_effective_hours",
         "child_ids.stage_id",
+        "child_ids.stage_id.fold",
         "product_backlog_id.task_hours",
     )
     def _compute_hours_get(self):
@@ -87,10 +88,11 @@ class ProjectTask(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'size' or super()._valid_field_parameter(field, name)
 
-    @api.model
-    def create(self, vals):
-        result = super(ProjectTask, self).create(vals)
-        if result.manager_id:
-            result.message_unsubscribe(partner_ids=[result.manager_id.id])
+    @api.model_create_multi
+    def create(self, vals_lst):
+        result = super(ProjectTask, self).create(vals_lst)
+        for rec in result:
+            if rec.manager_id:
+                rec.message_unsubscribe(partner_ids=[rec.manager_id.partner_id.id])
         return result
 

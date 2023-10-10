@@ -2,7 +2,7 @@
 {
     # Module information
     'name': 'Project Scrum Management Agile Methodology',
-    'version': '15.0.1.0.0',
+    'version': '16.0.1.0.0',
     'license': 'LGPL-3',
     'category': 'Project Scrum Management',
     'summary': '''
@@ -60,7 +60,7 @@
     'author': 'Serpent Consulting Services Pvt. Ltd.,David DRAPEAU',
     'website': 'https://www.serpentcs.com/',
 
-    # Dependancies
+    # Dependencies
     'depends': [
         'sale_timesheet',
         'calendar',

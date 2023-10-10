@@ -15,44 +15,21 @@ class Meeting(models.Model):
 
     @api.depends('allday', 'start', 'stop')
     def _compute_dates(self):
-        """ Adapt the value of start_date(time)/stop_date(time) according to start/stop fields and allday. Also, compute
-            the duration for not allday meeting ; otherwise the duration is set to zero, since the meeting last all the day.
+        """ Overriden to make sure duration is set to zero for all day events.
         """
+        super()._compute_dates()
         for meeting in self:
             if meeting.allday and meeting.start and meeting.stop:
-                meeting.start_date = meeting.start.date()
-                meeting.stop_date = meeting.stop.date()
                 meeting.duration = 0.0
             else:
-                meeting.start_date = meeting.start
-                meeting.stop_date = meeting.stop
-
                 meeting.duration = self._get_duration(meeting.start, meeting.stop)
 
-    def _inverse_dates(self):
-        for meeting in self:
-            if meeting.allday and meeting.start_date and meeting.stop_date:
-                end_date = fields.Datetime.from_string(meeting.stop_date)
-                end_date = end_date.replace(hour=18)
-
-                start_date = fields.Datetime.from_string(meeting.start_date)
-                start_date = start_date.replace(hour=10)
-
-                meeting.write({
-                    'start': start_date.replace(tzinfo=None),
-                    'stop': end_date.replace(tzinfo=None)
-                })
-            else:
-                meeting.write({'start': meeting.start,
-                               'stop': meeting.stop})
-
     start = fields.Datetime(
-        'Start', required=True, tracking=True, default=datetime.now(),
-        help="Start date of an event, without time for full days events")
+        default=datetime.now(),
+    )
     stop = fields.Datetime(
-        'Stop', required=True, tracking=True, default=datetime.now(),
-        compute='_compute_stop', readonly=False, store=True,
-        help="Stop date of an event, without time for full days events")
+        default=datetime.now(),
+        )
 
     status = fields.Selection([
         ('new', 'New'),
@@ -211,7 +188,7 @@ class ProjectScrumSprint(models.Model):
                 if date <= today:
                     for backlog in sprint.product_backlog_ids:
                         if (not backlog.date_done) or \
-                            (backlog.date_done and \
+                            (backlog.date_done and
                              backlog.date_done < date):
                             sum_points += backlog.complexity
                         for task in backlog.tasks_id:
@@ -350,10 +327,6 @@ class ProjectScrumSprint(models.Model):
         "User Stories",
 
     )
-    project_id = fields.Many2one(
-        'project.project',
-        "Project"
-    )
     sprint_number = fields.Char(
         'Sprint number',
         readonly=True,
@@ -366,12 +339,13 @@ class ProjectScrumSprint(models.Model):
         compute='_compute_meeting_count',
     )
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('sprint_number'):
-            vals['sprint_number'] = self.env['ir.sequence'].next_by_code(
-                'product.sprint.number') or '/'
-        return super(ProjectScrumSprint, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('sprint_number'):
+                vals['sprint_number'] = self.env['ir.sequence'].next_by_code(
+                    'product.sprint.number') or '/'
+        return super(ProjectScrumSprint, self).create(vals_list)
 
     @api.depends('name', 'sprint_number')
     def name_get(self):
@@ -477,24 +451,16 @@ class ScrumMeeting(models.Model):
         'Sandbox'
     )
 
-    @api.model
-    def create(self, vals):
-        duration = 0
-        if vals.get('duration'):
-            duration = vals.get('duration')
-        if vals.get('start_date') and vals.get('duration'):
-            vals['start_date'] = vals.get('start_date')
-            vals['start'] = vals.get('start')
-        if vals.get('start_date') and vals.get('duration'):
-            start = datetime.strptime(vals.get('start_date'), '%Y-%m-%d')
-            start_datetime = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-            stop_date = datetime.strptime(start_datetime,
-                                          DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(
-                hours=duration)
-            vals['stop_date'] = datetime.strftime(stop_date,
-                                                  DEFAULT_SERVER_DATETIME_FORMAT)
-        if vals.get('start_date'):
-            if isinstance(vals.get('start_date'), str):
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            duration = 0
+            if vals.get('duration'):
+                duration = vals.get('duration')
+            if vals.get('start_date') and vals.get('duration'):
+                vals['start_date'] = vals.get('start_date')
+                vals['start'] = vals.get('start')
+            if vals.get('start_date') and vals.get('duration'):
                 start = datetime.strptime(vals.get('start_date'), '%Y-%m-%d')
                 start_datetime = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
                 stop_date = datetime.strptime(start_datetime,
@@ -502,20 +468,29 @@ class ScrumMeeting(models.Model):
                     hours=duration)
                 vals['stop_date'] = datetime.strftime(stop_date,
                                                       DEFAULT_SERVER_DATETIME_FORMAT)
-            else:
-                start = datetime.strftime(vals.get('start_date'), DEFAULT_SERVER_DATETIME_FORMAT)
-                start_datetime = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-                stop_date = datetime.strftime(start_datetime,
-                                              DEFAULT_SERVER_DATETIME_FORMAT)
-                vals['stop_date'] = datetime.strptime(stop_date,
-                                                      DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(
-                    hours=duration)
-        if not vals.get('start'):
-            vals.update({'start': vals.get('start_date')})
-        create_id = super(ScrumMeeting, self).create(vals)
-        self.write({'scrum_meeting_id': create_id.id})
-
-        return create_id
+            if vals.get('start_date'):
+                if isinstance(vals.get('start_date'), str):
+                    start = datetime.strptime(vals.get('start_date'), '%Y-%m-%d')
+                    start_datetime = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+                    stop_date = datetime.strptime(start_datetime,
+                                                  DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(
+                        hours=duration)
+                    vals['stop_date'] = datetime.strftime(stop_date,
+                                                          DEFAULT_SERVER_DATETIME_FORMAT)
+                else:
+                    start = datetime.strftime(vals.get('start_date'), DEFAULT_SERVER_DATETIME_FORMAT)
+                    start_datetime = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+                    stop_date = datetime.strftime(start_datetime,
+                                                  DEFAULT_SERVER_DATETIME_FORMAT)
+                    vals['stop_date'] = datetime.strptime(stop_date,
+                                                          DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(
+                        hours=duration)
+            if not vals.get('start'):
+                vals.update({'start': vals.get('start_date')})
+        res = super(ScrumMeeting, self).create(vals_list)
+        for rec in res:
+            rec.meeting_id.write({'scrum_meeting_id': rec.id})
+        return res
 
     def send_email(self):
         """ Send Email individual to Owner and Master
@@ -920,6 +895,7 @@ class ProjectScrumProductBacklog(models.Model):
         compute='_compute_hours',
         group_operator="avg",
         help="Computed as: Time Spent / Total Time.",
+        compute_sudo=True
     )
     effective_hours = fields.Float(
         'Spent Hours',
@@ -932,7 +908,8 @@ class ProjectScrumProductBacklog(models.Model):
         'Task Hours',
         compute='_compute_hours',
         help='Estimated time of the total hours of the tasks',
-        recursive=True
+        recursive=True,
+        compute_sudo=True
     )
     color = fields.Integer('Color Index')
     note = fields.Text('Internal Note', translate=True)
@@ -1146,12 +1123,13 @@ class ProjectScrumProductBacklog(models.Model):
             velocity += backlog_id.complexity
         self.sprint_id.write({'effective_velocity': velocity})
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('backlog_number'):
-            vals['backlog_number'] = self.env['ir.sequence'].next_by_code(
-                'product.backlog.number') or '/'
-        return super(ProjectScrumProductBacklog, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('backlog_number'):
+                vals['backlog_number'] = self.env['ir.sequence'].next_by_code(
+                    'product.backlog.number') or '/'
+        return super(ProjectScrumProductBacklog, self).create(vals_list)
 
     @api.constrains('date_open', 'date_done')
     def _check_dates(self):
@@ -1282,12 +1260,13 @@ class ProjectTask(models.Model):
         if self.type == 'issue' and self.incidents:
             self.incidents = [(5,)]
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('task_number'):
-            vals['task_number'] = self.env['ir.sequence'].next_by_code(
-                'project.task.number') or '/'
-        return super(ProjectTask, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('task_number'):
+                vals['task_number'] = self.env['ir.sequence'].next_by_code(
+                    'project.task.number') or '/'
+        return super(ProjectTask, self).create(vals_list)
 
 
 class AccountAnalyticLine(models.Model):
@@ -1309,8 +1288,8 @@ class AccountAnalyticLine(models.Model):
 class MailAlias(models.Model):
     _inherit = 'mail.alias'
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Creates an email.alias record according to the values provided in ``vals``,
             with 2 alterations: the ``alias_name`` value may be suffixed in order to
             make it unique (and certain unsafe characters replaced), and
@@ -1319,15 +1298,16 @@ class MailAlias(models.Model):
         """
         model_name = self._context.get('alias_model_name')
         parent_model_name = self._context.get('alias_parent_model_name')
-        if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
-        if model_name:
-            model = self.env['ir.model']._get(model_name)
-            vals['alias_model_id'] = model.id
-        if parent_model_name:
-            model = self.env['ir.model']._get(parent_model_name)
-            vals['alias_parent_model_id'] = model.id
-        return super(MailAlias, self).create(vals)
+        for vals in vals_list:
+            if vals.get('alias_name'):
+                vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
+            if model_name:
+                model = self.env['ir.model']._get(model_name)
+                vals['alias_model_id'] = model.id
+            if parent_model_name:
+                model = self.env['ir.model']._get(parent_model_name)
+                vals['alias_parent_model_id'] = model.id
+        return super(MailAlias, self).create(vals_list)
 
 
 class ProjectProject(models.Model):
@@ -1340,16 +1320,16 @@ class ProjectProject(models.Model):
         readonly=True
     )
 
-    @api.model
-    def create(self, vals):
-        alias_name = vals.get('alias_name')
-        res = super(ProjectProject, self).create(vals)
-        default_alias_name = self.env['mail.alias']. \
-            with_context(alias_model_name='project.task',
-                         alias_parent_model_name='project.project').create(
-            {'alias_name': self.alias_name})
-        res.update({
-            'alias_name': default_alias_name.alias_name if alias_name is False
-            else alias_name
-        })
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(ProjectProject, self).create(vals_list)
+        for rec in res:
+            default_alias_name = self.env['mail.alias']. \
+                with_context(alias_model_name='project.task',
+                             alias_parent_model_name='project.project').create(
+                {'alias_name': rec.alias_name})
+            rec.update({
+                'alias_name': default_alias_name.alias_name if not rec.alias_name
+                else rec.alias_name
+            })
         return res

@@ -5,6 +5,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
     var datepicker = require('web.datepicker');
     var Dialog = require('web.Dialog');
     var ajax = require('web.ajax');
+    const { loadBundle } = require("@web/core/assets");
     var field_utils = require('web.field_utils');
     var AbstractAction = require('web.AbstractAction');
     var Widget = require('web.Widget');
@@ -97,9 +98,12 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             });
             self.week_number = moment(new Date()).week();
             self.last_update_on = new Date('1990-01-01');
-            return $.when(ajax.loadLibs(this), this._super()).then(function () {
+            return Promise.all([loadBundle(this), this._super()]).then(function() {
                 return self.fetch_data();
-            });
+            })
+//            return $.when(ajax.loadLibs(this), this._super()).then(function () {
+//                return self.fetch_data();
+//            });
         },
 
         /**
@@ -209,6 +213,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
 
         render_dashboard: function () {
             var self = this;
+            self.$el.html('');
             self.$el.append(QWeb.render('management_dashboard.PMDashboardView', {
                 widget: this
             }));
@@ -1050,7 +1055,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     break;
 
             }
-            self.$el.html('');
             self.fetch_data();
             self.render_dashboard();
         },

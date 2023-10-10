@@ -38,7 +38,14 @@ class ProjectScrumRelease(models.Model):
                 if sprint.state != "cancel"
             )
 
-    @api.depends("total_planned_hours", "total_planned_hours_edit")
+    @api.depends("total_planned_hours",
+                 "total_planned_hours_edit",
+                 "project_id",
+                 "project_id.release_ids",
+                 "project_id.release_ids.sprint_ids",
+                 "project_id.release_ids.total_planned_hours_edit",
+                 "project_id.release_ids.total_planned_hours",
+                 )
     def _compute_weightage(self):
         """ This method used to calculate weightage of release based on
             milestone planned hours """
@@ -81,13 +88,14 @@ class ProjectScrumRelease(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'size' or super()._valid_field_parameter(field, name)
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_lst):
         """ This method used to manage release details log in
             project used in release """
-        result = super(ProjectScrumRelease, self).create(vals)
-        if vals.get("project_id", ""):
-            if result.project_id:
+        result = super(ProjectScrumRelease, self).create(vals_lst)
+        user_name = self.env.user.name
+        for rec in result:
+            if rec.project_id:
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
@@ -95,15 +103,16 @@ class ProjectScrumRelease(models.Model):
                     Release Number: <span> %s </span></li>
                     Release Name: <span> %s </span></li>"""
                     )
-                    % (self.env.user.name, result.release_number, result.name)
+                    % (user_name, rec.release_number, rec.name)
                 )
-                result.project_id.message_post(body=msg)
+                rec.project_id.message_post(body=msg)
         return result
 
     def write(self, vals):
         """ This method used to update release details in project
             used in release """
         if vals.get("project_id", ""):
+            user_name = self.env.user.name
             for rec in self:
                 if rec.project_id:
                     msg = (
@@ -113,11 +122,12 @@ class ProjectScrumRelease(models.Model):
                         Release Number: <span> %s </span></li>
                         Release Name: <span> %s </span></li>"""
                         )
-                        % (self.env.user.name, rec.release_number, rec.name)
+                        % (user_name, rec.release_number, rec.name)
                     )
                     rec.project_id.message_post(body=msg)
         res = super(ProjectScrumRelease, self).write(vals)
         if vals.get("project_id", ""):
+            user_name = self.env.user.name
             for rec in self:
                 if rec.project_id:
                     msg = (
@@ -127,7 +137,7 @@ class ProjectScrumRelease(models.Model):
                         Release Number: <span> %s </span></li>
                         Release Name: <span> %s </span></li>"""
                         )
-                        % (self.env.user.name, rec.release_number, rec.name)
+                        % (user_name, rec.release_number, rec.name)
                     )
                     rec.project_id.message_post(body=msg)
         return res

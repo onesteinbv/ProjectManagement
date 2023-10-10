@@ -4,7 +4,6 @@ from odoo import api, fields, models
 
 
 class HelpdeskTicket(models.Model):
-
     _inherit = "helpdesk.ticket"
 
     ticket_aging = fields.Char(
@@ -33,9 +32,9 @@ class HelpdeskTicket(models.Model):
         tickets which are not in resolved / closed state.
         :return: Ticket Age in days(Integer)
         """
-        ticket_aging = 0
         current_datetime = fields.Datetime.now()
         for ticket in self:
+            ticket_aging = 0
             closed_date = ticket.closed_date
             creation_date = ticket.create_date
             if ticket.stage_id.closed and closed_date:

@@ -6,7 +6,7 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <button name="action_view_all_rating" position="after">
+            <button name="project_update_all_action" position="after">
                 <button class="oe_stat_button"
                         name="%(project_scrum_agile.action_project_scrum_product_backlog)d"
                         type="action"
@@ -40,11 +40,14 @@
                 <field name="is_scrum" class="oe_inline"/>
                 <label for="is_scrum"/>
             </xpath>
-            <field name="user_id" position="replace">
+            <field name="user_id" position="before">
                 <field name="team_id"
                        attrs="{'invisible':[('is_scrum', '=', False)]}"/>
-                <field name="user_id"
-                       attrs="{'invisible':[('is_scrum', '=', True)]}"/>
+            </field>
+            <field name="user_id" position="attributes">
+                <attribute name="attrs">{'invisible':[('is_scrum', '=', False)],'readonly': [('active','=',False)]}</attribute>
+            </field>
+            <field name="user_id" position="after">
                 <field name="scrum_master_id"
                        attrs="{'invisible':[('is_scrum', '=', False)]}"
                         context="{'filter_scrum_master': True}"/>

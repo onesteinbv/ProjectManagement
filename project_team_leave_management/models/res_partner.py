@@ -24,11 +24,11 @@ class ResPartner(models.Model):
         Open a Form(If there's only one user) or
         Tree(If more then one user) view of res.users
         """
+        self.ensure_one()
         action = self.env.ref("base.action_res_users")
-        for partner in self:
-            if partner.total_users == 1:
-                action["views"] = [(self.env.ref("base.view_users_form").id, "form")]
-                action["res_id"] = partner.user_ids.ids[0]
-            result = action.read()[0]
-            result["domain"] = "[('partner_id','=', %s)]" % (partner.id)
-            return result
+        if self.total_users == 1:
+            action["views"] = [(self.env.ref("base.view_users_form").id, "form")]
+            action["res_id"] = self.user_ids.ids[0]
+        result = action.read()[0]
+        result["domain"] = "[('partner_id','=', %s)]" % (self.id)
+        return result

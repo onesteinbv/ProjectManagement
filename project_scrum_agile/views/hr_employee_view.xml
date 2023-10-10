@@ -5,13 +5,16 @@
         <field name="name">hr.employee.form.inherit</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id"
-               ref="hr_timesheet.hr_employee_view_form_inherit_timesheet"/>
+               ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <label for="timesheet_cost" position="before">
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="application_group" position="inside">
                 <field name="product_id" domain="[('type','=','service')]"/>
                 <field name="journal_id"/>
                 <field name="project_task_id"/>
-            </label>
+            </group>
         </field>
     </record>
 

@@ -6,7 +6,7 @@ Custom theme for Onestein
 Authors
 ~~~~~~~
 
-* onestein
+* Onestein
 * Serpent Consulting Services Pvt. Ltd.
 
 

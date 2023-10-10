@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template
-        id="custom_inherit_external_bg_layout"
-        inherit_id="web.external_layout_striped"
-    >
-        <xpath expr="//div[hasclass('company_address')]" position="replace" />
-    </template>
-    <template
-        id="custom_inherit_external_bxd_layout"
-        inherit_id="web.external_layout_boxed"
-    >
-        <xpath expr='//div[@name="company_address"]' position="replace" />
-    </template>
-    <template
-        id="custom_inherit_external_clean_layout"
-        inherit_id="web.external_layout_bold"
-    >
-        <xpath expr='//div[@name="company_address"]' position="replace" />
-    </template>
-    <template
-        id="custom_inherit_external_std_layout"
-        inherit_id="web.external_layout_standard"
-    >
-        <xpath expr='//div[@name="company_address"]' position="replace" />
-    </template>
+<!--    <template-->
+<!--        id="custom_inherit_external_bg_layout"-->
+<!--        inherit_id="web.external_layout_striped"-->
+<!--    >-->
+<!--        <xpath expr="//div[hasclass('company_address')]" position="replace" />-->
+<!--    </template>-->
+<!--    <template-->
+<!--        id="custom_inherit_external_bxd_layout"-->
+<!--        inherit_id="web.external_layout_boxed"-->
+<!--    >-->
+<!--        <xpath expr='//div[@name="company_address"]' position="replace" />-->
+<!--    </template>-->
+<!--    <template-->
+<!--        id="custom_inherit_external_clean_layout"-->
+<!--        inherit_id="web.external_layout_bold"-->
+<!--    >-->
+<!--        <xpath expr='//div[@name="company_address"]' position="replace" />-->
+<!--    </template>-->
+<!--    <template-->
+<!--        id="custom_inherit_external_std_layout"-->
+<!--        inherit_id="web.external_layout_standard"-->
+<!--    >-->
+<!--        <xpath expr='//div[@name="company_address"]' position="replace" />-->
+<!--    </template>-->
 
     <template id="report_timesheet_invoice">
         <t t-call="web.html_container">
@@ -543,6 +543,8 @@
          <field
             name="report_file"
         >project_timesheet_management.report_timesheet_invoice</field>
+        <field name="binding_model_id" ref="model_timesheet_invoice"/>
+        <field name="binding_type">report</field>
     </record>
 
 </odoo>

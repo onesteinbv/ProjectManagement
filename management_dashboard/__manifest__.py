@@ -2,8 +2,8 @@
 
 {
     'name': 'Project Management Dashboard',
-    'version': '15.0.1.0.0',
-    'summary': 'A Module provide summary to manage project.',
+    'version': '16.0.1.0.0',
+    'summary': 'Provide summaries to manage project.',
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
     'category': 'Project Scrum Management',
@@ -27,10 +27,8 @@
     'assets': {
         'web.assets_backend': [
             'management_dashboard/static/src/scss/management-admin.scss',
-            'management_dashboard/static/src/js/management_dashbord.js'
-        ],
-        'web.assets_qweb': [
-            'management_dashboard/static/src/xml/**/*'
+            'management_dashboard/static/src/js/management_dashbord.js',
+            'management_dashboard/static/src/xml/management_dashboard.xml'
         ],
 
     },

@@ -33,7 +33,7 @@ class ScrumMeeting(models.Model):
         if self.stop and not self.duration:
             self.duration = self._get_duration(self.start_date, self.stop)
         elif not self.stop:
-            end = start + timedelta(hours=self.duration)
+            end = self.start + timedelta(hours=self.duration)
             self.stop = end.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         elif self.stop and self.duration and not self.allday:
             duration = self._get_duration(self.start_date, self.stop)

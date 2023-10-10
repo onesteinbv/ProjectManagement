@@ -16,7 +16,7 @@
             <page name="public_holidays" position="after">
                 <page name="supplier_contracts" string="Contract Management">
                     <field
-                        name="supplier_contracts_ids"
+                        name="supplier_contract_ids"
                         context="{'default_partner_id': active_id}"
                     >
                         <tree name='Contracts'>

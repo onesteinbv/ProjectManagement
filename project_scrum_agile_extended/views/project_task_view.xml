@@ -19,7 +19,7 @@
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <field name="planned_hours" position="after">
+            <field name="progress" position="after">
                 <field name="estimate_adjustment" />
                 <field name="weightage" />
             </field>

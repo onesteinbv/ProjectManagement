@@ -7,14 +7,15 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Work Tasks" editable="top">
+                <field name="company_id" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="unit_amount"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="project_id"/>
                 <field name="task_id"
                        domain="[('project_id', '=', project_id)]"/>
                 <field name="account_id"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="user_id"/>
             </tree>
         </field>

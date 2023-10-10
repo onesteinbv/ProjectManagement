@@ -11,9 +11,7 @@ class ProjectScrumSprint(models.Model):
         "product_backlog_ids.expected_hours",
         "product_backlog_ids.effective_hours",
         "product_backlog_ids.stage_id",
-        "release_id.sprint_ids",
-        "release_id.sprint_ids.expected_hours",
-        "product_backlog_ids.stage_id",
+        "release_id",
         "release_id.sprint_ids",
         "release_id.sprint_ids.expected_hours",
     )
@@ -67,29 +65,31 @@ class ProjectScrumSprint(models.Model):
     def _valid_field_parameter(self, field, name):
         return name == 'size' or super()._valid_field_parameter(field, name)
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ This method used to add sprint details log in related
-            release used in sprint """
-        result = super(ProjectScrumSprint, self).create(vals)
-        if vals.get("release_id", ""):
-            msg = (
-                _(
-                    """ <ul class="o_mail_thread_message_tracking">
-                <li>Sprint Added by: <span> %s </span></li><li>
-                Sprint Number: <span> %s </span></li>
-                Sprint Name: <span> %s </span></li>"""
+                    release used in sprint """
+        result = super(ProjectScrumSprint, self).create(vals_list)
+        user_name = self.env.user.name
+        for rec in result:
+            if rec.release_id:
+                msg = (
+                    _(
+                        """ <ul class="o_mail_thread_message_tracking">
+                    <li>Sprint Added by: <span> %s </span></li><li>
+                    Sprint Number: <span> %s </span></li>
+                    Sprint Name: <span> %s </span></li>"""
+                    )
+                    % (user_name, rec.sprint_number, rec.name)
                 )
-                % (self.env.user.name, result.sprint_number, result.name)
-            )
-            if result.release_id:
-                result.release_id.message_post(body=msg)
+                rec.release_id.message_post(body=msg)
         return result
 
     def write(self, vals):
         """ This method used to update sprint detail logs in related
             release used in sprint """
         if vals.get("release_id", ""):
+            user_name = self.env.user.name
             for rec in self:
                 if rec.release_id:
                     msg = (
@@ -99,11 +99,12 @@ class ProjectScrumSprint(models.Model):
                         Sprint Number: <span> %s </span></li>
                         Sprint Name: <span> %s </span></li>"""
                         )
-                        % (self.env.user.name, rec.sprint_number, rec.name)
+                        % (user_name, rec.sprint_number, rec.name)
                     )
                     rec.release_id.message_post(body=msg)
         res = super(ProjectScrumSprint, self).write(vals)
         if vals.get("release_id", ""):
+            user_name = self.env.user.name
             for rec in self:
                 if rec.release_id:
                     msg = (
@@ -113,7 +114,7 @@ class ProjectScrumSprint(models.Model):
                         Sprint Number: <span> %s </span></li>
                         Sprint Name: <span> %s </span></li>"""
                         )
-                        % (self.env.user.name, rec.sprint_number, rec.name)
+                        % (user_name, rec.sprint_number, rec.name)
                     )
                     rec.release_id.message_post(body=msg)
         return res
@@ -121,6 +122,7 @@ class ProjectScrumSprint(models.Model):
     def unlink(self):
         """ This method used to manage logs in sprint when remove
             release from sprint """
+        user_name = self.env.user.name
         for rec in self:
             if rec.release_id:
                 msg = (
@@ -130,7 +132,7 @@ class ProjectScrumSprint(models.Model):
                     Sprint Number: <span> %s </span></li>
                     Sprint Name: <span> %s </span></li>"""
                     )
-                    % (self.env.user.name, rec.sprint_number, rec.name)
+                    % (user_name, rec.sprint_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
         return super(ProjectScrumSprint, self).unlink()

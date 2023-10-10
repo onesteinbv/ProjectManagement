@@ -11,9 +11,9 @@ class ProjectProject(models.Model):
         """
         Compute Timesheet Invoice Count
         """
-        task_obj = self.env["timesheet.invoice"]
+        timesheet_invoice_obj = self.env["timesheet.invoice"]
         for project in self:
-            project.timesheet_invoice_count = task_obj.search_count(
+            project.timesheet_invoice_count = timesheet_invoice_obj.search_count(
                 [("project_id", "=", project.id)]
             )
 

@@ -58,16 +58,14 @@ class ProjectProject(models.Model):
     @api.depends("actual_budget", "spent_budget", "percentage_completed")
     def _compute_budget_completion(self):
         for project in self:
-            budget_of_completion = 0.0
-            if project.percentage_completed > 0 and project.stage_id.is_close is False:
-                budget_of_completion = (
-                    (
-                        (100 - project.percentage_completed)
-                        / project.percentage_completed
-                    )
-                    * project.spent_budget
-                ) + project.spent_budget
-            project.budget_of_completion = budget_of_completion
+            project.budget_of_completion = (
+                                                   (
+                                                           (100 - project.percentage_completed)
+                                                           / project.percentage_completed
+                                                   )
+                                                   * project.spent_budget
+                                           ) + project.spent_budget \
+                if project.percentage_completed > 0 and project.stage_id.is_close is False else 0.0
 
     def _compute_assignee_id_editable(self):
         cann_pro_crd = self.env.user.has_group(
@@ -83,7 +81,7 @@ class ProjectProject(models.Model):
                 True if (rec.stage_id and rec.stage_id.is_close is True) else False
             )
 
-    @api.depends("date_start", "percentage_completed", "expected_end_date", "stage_id")
+    @api.depends("date_start", "percentage_completed", "expected_end_date", "stage_id", "stage_id.is_close")
     def _compute_projected_end_date(self):
         today_date = fields.Date.today()
         for project in self:
@@ -179,13 +177,6 @@ class ProjectProject(models.Model):
     )
     date = fields.Date(string="Actual End Date", tracking=True)
     date_start = fields.Date(copy=False, tracking=True)
-    expected_end_date = fields.Date(
-        string="Expected Finish Date",
-        tracking=True,
-        copy=False,
-        readonly=0,
-        help="Expected End date of Project",
-    )
     projected_end_date = fields.Date(
         compute="_compute_projected_end_date",
         string="Projected End Date",

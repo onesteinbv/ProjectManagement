@@ -21,6 +21,8 @@ class ProjectScrumEmail(models.TransientModel):
         res = super(ProjectScrumEmail, self).default_get(fields)
         for meeting in meeting_pool.browse(record_ids):
             sprint = meeting.sprint_id
+            meeting_date = meeting.start_date
+            meeting_date = format_date(self.env, meeting_date, self.env.user.lang)
             if 'scrum_master_email' in fields:
                 res.update({'scrum_master_email': sprint.scrum_master_id and
                             sprint.scrum_master_id.partner_id.email or False})
@@ -28,8 +30,6 @@ class ProjectScrumEmail(models.TransientModel):
                 res.update({'product_owner_email': sprint.product_owner_id and
                             sprint.product_owner_id.partner_id.email or False})
             if 'subject' in fields:
-                meeting_date = meeting.start_date
-                meeting_date = format_date(self.env, meeting_date, self.env.user.lang)
                 subject = _("Scrum Meeting : %s") % meeting_date
                 res.update({'subject': subject})
             if 'message' in fields:

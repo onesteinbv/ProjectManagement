@@ -121,10 +121,10 @@
                     </group>
                     <separator string="Resource Calculation" />
                     <group>
-                        <field name="resource_calculation_ids" nolabel="1">
+                        <field name="resource_calculation_ids" nolabel="1" colspan="2">
                             <tree editable="bottom">
-                                <field name="resource_id" />
-                                <field name="resource_amount" />
+                                <field name="resource_id"/>
+                                <field name="resource_amount"/>
                                 <field
                                     name="worked_hours"
                                     widget="float_time"

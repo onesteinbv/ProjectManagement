@@ -29,9 +29,9 @@ class ProjectProject(models.Model):
             task_count = task_obj.search([
                 ("project_id", "=", project.id)])
             project.open_tasks_count = len(task_count.filtered(
-                lambda s: not s.date_end and not s.stage_id.is_closed))
+                lambda s: not s.date_end and not s.stage_id.fold))
             project.close_tasks_count = len(task_count.filtered(
-                lambda s: s.date_end and s.stage_id.is_closed))
+                lambda s: s.date_end and s.stage_id.fold))
 
     def _compute_resource_count(self):
         for project in self:

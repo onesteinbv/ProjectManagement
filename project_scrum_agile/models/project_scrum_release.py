@@ -36,13 +36,14 @@ class ProjectScrumRelease(models.Model):
         help="Sequence of the release number"
     )
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('release_number'):
-            vals['release_number'] = \
-                self.env['ir.sequence'].next_by_code('project.scrum.release') \
-                or '/'
-        return super(ProjectScrumRelease, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('release_number'):
+                vals['release_number'] = \
+                    self.env['ir.sequence'].next_by_code('project.scrum.release') \
+                    or '/'
+        return super(ProjectScrumRelease, self).create(vals_list)
 
     @api.constrains('date_start', 'date_stop')
     def _check_dates(self):

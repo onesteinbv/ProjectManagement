@@ -1,16 +1,16 @@
 [submodule "project"]
 	path = project
 	url = https://github.com/OCA/project.git
-	branch = 15.0
+	branch = 16.0
 [submodule "agreement"]
 	path = agreement
 	url = https://github.com/OCA/agreement.git
-	branch = 15.0
+	branch = 16.0
 [submodule "helpdesk"]
 	path = helpdesk
 	url = https://github.com/OCA/helpdesk.git
-	branch = 15.0
+	branch = 16.0
 [submodule "web"]
 	path = web
 	url = https://github.com/OCA/web.git
-	branch = 15.0
+	branch = 16.0

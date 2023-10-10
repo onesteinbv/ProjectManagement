@@ -2,8 +2,10 @@ web/web_environment_ribbon
 web/web_timeline
 agreement/agreement
 agreement_extended
+helpdesk/helpdesk_mgmt
 helpdesk/helpdesk_mgmt_project
 project/project_task_default_stage
+project/project_timeline
 project_budget_management
 project_management_security
 project_scrum_agile

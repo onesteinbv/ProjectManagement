@@ -81,7 +81,7 @@ class ManagementDashboard(models.Model):
                 daysdiff = (schedule_date - today_date).days
                 if daysdiff <= 1:
                     open_task = 2
-                if daysdiff <= 7 and daysdiff > 1 and open_task != 2:
+                if 7 >= daysdiff > 1 and open_task != 2:
                     open_task = 1
                 if daysdiff > 7 and open_task not in (2, 1):
                     open_task = 0
@@ -97,12 +97,12 @@ class ManagementDashboard(models.Model):
                     (int(issue.ticket_aging) > 2 and issue.priority in
                         ('2', '3'))):
                 open_issue = 2
-            if ((int(issue.ticket_aging) > 10 and int(issue.ticket_aging) <= 30 and
-                    issue.priority == '0') or
-                    (int(issue.ticket_aging) > 2 and int(issue.ticket_aging) <= 10 and
-                        issue.priority == '1') or
-                    (int(issue.ticket_aging) > 0 and int(issue.ticket_aging) <= 2 and
-                        issue.priority in ('2', '3')) and
+            if ((10 < int(issue.ticket_aging) <= 30 and
+                 issue.priority == '0') or
+                    (2 < int(issue.ticket_aging) <= 10 and
+                     issue.priority == '1') or
+                    (0 < int(issue.ticket_aging) <= 2 and
+                     issue.priority in ('2', '3')) and
                     open_issue != 2):
                 open_issue = 1
             if ((int(issue.ticket_aging) <= 10 and issue.priority == '0') or
@@ -118,7 +118,7 @@ class ManagementDashboard(models.Model):
 
         if budget > 30:
             spent_budget = 2
-        elif budget > 10 and budget <= 30:
+        elif 10 < budget <= 30:
             spent_budget = 1
         elif budget <= 10:
             spent_budget = 0
@@ -130,7 +130,7 @@ class ManagementDashboard(models.Model):
         for inv in invoices or []:
             if int(inv.timesheet_inv_age) > 30:
                 pending_invoice = 2
-            elif int(inv.timesheet_inv_age) > 10 and int(inv.timesheet_inv_age) < 30 and pending_invoice != 2:
+            elif 10 < int(inv.timesheet_inv_age) < 30 and pending_invoice != 2:
                 pending_invoice = 1
             elif int(inv.timesheet_inv_age) < 10 and pending_invoice not in (2, 1):
                 pending_invoice = 0

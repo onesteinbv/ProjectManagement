@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ProjectProject(models.Model):
     _inherit = "project.project"
 
-    @api.depends("tasks")
+    @api.depends("percentage_completed")
     def _compute_progress(self):
         """ This method used to calculate project progress based on project
             completed percentage """
@@ -16,17 +16,15 @@ class ProjectProject(models.Model):
             )
 
     @api.depends(
-        "total_planned_hours",
         "release_ids",
         "release_ids.progress",
-        "release_ids.total_planned_hours",
+        "release_ids.weightage",
     )
     def _compute_overall_progress(self):
         for project in self:
-            progress = sum(
+            project.overall_progress = sum(
                 release.weightage * release.progress for release in project.release_ids
             )
-            project.overall_progress = progress
 
     @api.depends("actual_hours", "percentage_completed")
     def _compute_closed_hours(self):
@@ -34,12 +32,9 @@ class ProjectProject(models.Model):
         Compute Closed Hours of Project.
         """
         for project in self:
-            closed_hours = 0
-            if project.actual_hours:
-                closed_hours = (
+            project.closed_hours = (
                     project.percentage_completed * project.actual_hours
-                ) / 100
-            project.closed_hours = closed_hours
+                ) / 100 if project.actual_hours else 0
 
     @api.depends("release_ids", "release_ids.total_planned_hours")
     def _compute_hours(self):

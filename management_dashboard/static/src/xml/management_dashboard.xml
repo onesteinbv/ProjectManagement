@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="md_template" xml:space="preserve">
-    <t t-name="management_dashboard.PMDashboardView">
+    <div t-name="management_dashboard.PMDashboardView" class="o_content">
         <div id="content-wrapper management_dashboard">
             <div class="container-fluid">
-
                 <div class="row">
                     <div class="dashboard_top_nav">
                         <button class="dashboard_sidebar-toggle is-closed">
-                            <i class="fa fa-angle-right icon"></i>
+                            <i class="fa fa-angle-right icon"/>
                         </button>
 
                         <div class="dashboard_filter">
-                            <button t-att-class="(widget.filter == 'today') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="today">
+                            <button t-att-class="(widget.filter == 'today') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'"
+                                    data-filter="today">
                                 <span class="filter_btn_inner">Today</span>
                             </button>
 
-                            <button t-att-class="(widget.filter == 'week') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="week">
+                            <button t-att-class="(widget.filter == 'week') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'"
+                                    data-filter="week">
                                 <span class="filter_btn_inner">This Week (<t t-esc="widget.week_number"/>)</span>
                             </button>
 
-                            <button t-att-class="(widget.filter == 'month') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="month">
+                            <button t-att-class="(widget.filter == 'month') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'"
+                                    data-filter="month">
                                 <span class="filter_btn_inner">This Month</span>
                             </button>
 
-                            <button t-att-class="(widget.filter == 'year') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'" data-filter="year">
+                            <button t-att-class="(widget.filter == 'year') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'"
+                                    data-filter="year">
                                 <span class="filter_btn_inner">This Year</span>
                             </button>
 
                             <div class="div_filter_input">
-                                <span class="span_filter" id="start_date"></span>
+                                <span class="span_filter" id="start_date"/>
                                 <label class="label_filter">TO</label>
-                                <span class="span_filter" id="end_date"></span>
+                                <span class="span_filter" id="end_date"/>
                             </div>
 
                         </div>
@@ -55,7 +58,8 @@
                                 <div class="card-header" t-att-style="'background:' + widget.card_header_color">
                                     Overall Project Status
                                 </div>
-                                <canvas id="project-status-chart" height="175" width="240" style="margin: 13px 5px 5px 19px; max-height: 168px; max-width: 230px;"></canvas>
+                                <canvas id="project-status-chart" height="175" width="240"
+                                        style="margin: 13px 5px 5px 19px; max-height: 168px; max-width: 230px;"/>
                             </div>
                         </div>
 
@@ -65,7 +69,8 @@
                                 <div class="card-header" t-att-style="'background:' + widget.card_header_color">
                                     Projects at Budget Risk
                                 </div>
-                                <canvas id="budget-risk-project-chart" height="175" style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"></canvas>
+                                <canvas id="budget-risk-project-chart" height="175"
+                                        style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"/>
                             </div>
                         </div>
 
@@ -75,7 +80,8 @@
                                 <div class="card-header" t-att-style="'background:' + widget.card_header_color">
                                     Projects at Time Risk
                                 </div>
-                                <canvas id="projects-time-risk-chart" height="175" style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"></canvas>
+                                <canvas id="projects-time-risk-chart" height="175"
+                                        style="margin: 5px 0px 5px 15px; max-height: 175px; max-width: 315px;"/>
                             </div>
                         </div>
 
@@ -85,7 +91,8 @@
                                 <div class="card-header" t-att-style="'background:' + widget.card_header_color">
                                     Vendor Utilization
                                 </div>
-                                <canvas id="vendor-utilization-chart" height="175" width="240" style="margin: 10px 5px 5px 19px; max-height: 168px; max-width: 230px;"></canvas>
+                                <canvas id="vendor-utilization-chart" height="175" width="240"
+                                        style="margin: 10px 5px 5px 19px; max-height: 168px; max-width: 230px;"/>
                             </div>
                         </div>
 
@@ -100,7 +107,8 @@
                             <div class="card-small-header" t-att-style="'background:' + widget.card_header_color">
                                 Project Report
                             </div>
-                            <table class="table w-100 table-condensed table-hover no-wrap table-bordered" id="heat-map-table">
+                            <table class="table w-100 table-condensed table-hover no-wrap table-bordered"
+                                   id="heat-map-table">
                                 <thead>
                                     <tr>
                                         <th class="middle-header" width="28%">Project</th>
@@ -134,7 +142,7 @@
                                 Project Timeline
                             </div>
                             <div class="gantt-wrapper gantt-full-width">
-                                <div class="gantt-target"></div>
+                                <div class="gantt-target"/>
                             </div>
                         </div>
                     </div>
@@ -149,5 +157,5 @@
 
             </div>
         </div>
-    </t>
+    </div>
 </templates>

@@ -2,7 +2,7 @@
 {
     # Module information
     "name": "Project Management Security",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "LGPL-3",
     "category": "Project Management",
     "summary": """

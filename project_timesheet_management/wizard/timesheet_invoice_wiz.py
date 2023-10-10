@@ -116,9 +116,9 @@ class TimesheetInvoiceWiz(models.TransientModel):
                 if wiz.project_id:
                     message += """<br><b>Project</b> : """ + wiz.project_id.name
                 if wiz.submit_date:
-                    message += """<br><b>Submit Date</b> : """ + wiz.submit_date
+                    message += """<br><b>Submit date</b> : %s""" % wiz.submit_date
                 if wiz.date_due:
-                    message += """<br><b>Due date</b> : """ + wiz.date_due
+                    message += """<br><b>Due date</b> : %s""" % wiz.date_due
                 if wiz.document_type:
                     message += """<br><b>Document Type</b> : """ + wiz.document_type
                 if wiz.description:

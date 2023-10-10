@@ -8,7 +8,7 @@ class ReportTimesheetInvoice(models.AbstractModel):
     _description = "Report Timesheet Invoice"
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         records = self.env["timesheet.invoice"].browse(docids)
         if any(record.state not in ("approved", "completed") for record in records):
             raise UserError(

@@ -2,7 +2,7 @@
 
 {
     "name": "Project Timesheet Management",
-    "version": "15.0.1.1.1",
+    "version": "16.0.1.0.0",
     "summary": "A Module adds features to the Project Timesheet Management.",
     "author": """Serpent Consulting Services Pvt. Ltd.""",
     "website": "http://www.serpentcs.com",

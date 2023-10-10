@@ -8,7 +8,7 @@ This module allows track leaves of supplier.
 Authors
 ~~~~~~~
 
-* onestein
+* Onestein
 * Serpent Consulting Services Pvt. Ltd.
 
 
