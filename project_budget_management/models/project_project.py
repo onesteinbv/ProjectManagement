@@ -66,14 +66,14 @@ class ProjectProject(models.Model):
         """
         for project in self:
             amount_invoiced, amount_to_invoice = project._get_cost_items_from_vendor_bills()
-            amount_invoiced += sum(
+            amount_invoiced += abs(sum(
                 timesheet.amount for timesheet in project.timesheet_ids if
                 (not timesheet.sheet_state or (timesheet.sheet_state and timesheet.sheet_state == 'done'))
-            )
-            running_cost_for_timesheets = sum(
+            ))
+            running_cost_for_timesheets = abs(sum(
                 timesheet.amount for timesheet in project.timesheet_ids if
                 timesheet.sheet_state and timesheet.sheet_state != 'done'
-            )
+            ))
             project.spent_budget = amount_invoiced
             project.running_cost_for_invoices = amount_to_invoice
             project.running_cost_for_timesheets = running_cost_for_timesheets
