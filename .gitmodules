@@ -14,3 +14,7 @@
 	path = web
 	url = https://github.com/OCA/web.git
 	branch = 16.0
+[submodule "timesheet"]
+	path = timesheet
+	url = https://github.com/OCA/timesheet.git
+	branch = 16.0

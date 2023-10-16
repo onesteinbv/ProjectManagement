@@ -1,5 +1,6 @@
 web/web_environment_ribbon
 web/web_timeline
+web/web_widget_x2many_2d_matrix
 agreement/agreement
 agreement_extended
 helpdesk/helpdesk_mgmt
@@ -11,6 +12,6 @@ project_management_security
 project_scrum_agile
 project_scrum_agile_extended
 project_team_leave_management
-project_timesheet_management
 management_dashboard
 theme_onestein
+timesheet/hr_timesheet_sheet
