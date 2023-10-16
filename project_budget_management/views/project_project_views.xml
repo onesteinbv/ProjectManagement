@@ -56,6 +56,7 @@
                     groups="project_management_security.group_cio,project.group_project_manager,project_management_security.group_project_coordinator,base.group_system"
                 >
                     <group string="Budget">
+                        <field name="currency_id" invisible="1"/>
                         <field
                             name="actual_budget"
                             attrs="{'readonly':[('assignee_id_editable', '=', False)]}"

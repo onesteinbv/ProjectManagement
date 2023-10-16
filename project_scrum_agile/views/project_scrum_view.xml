@@ -741,7 +741,7 @@
                                 <field name="effective_velocity"/>
                             </group>
                         </page>
-                        <page string="User stories">
+                        <page string="Product Backlog">
                             <field name="product_backlog_ids"
                                    context="{'default_project_id':project_id, 'default_product_backlog_id':active_id,
                                    'default_release_id':release_id,'default_sprint_id':active_id,}">

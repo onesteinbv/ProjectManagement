@@ -148,7 +148,7 @@
     <menuitem action="action_project_scrum_release"
               id="menu_action_project_scrum_release"
               sequence="2"
-              parent="menu_scrum" name="Sprint Releases"
+              parent="menu_scrum" name="Releases"
     />
 
 </odoo>

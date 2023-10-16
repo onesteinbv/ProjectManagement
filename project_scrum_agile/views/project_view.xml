@@ -62,6 +62,9 @@
                     <field name="goal"/>
                 </page>
             </xpath>
+            <field name="privacy_visibility" position="after">
+                <field name="resource_ids" widget="many2many_tags" />
+            </field>
         </field>
     </record>
 

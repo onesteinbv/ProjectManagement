@@ -73,4 +73,20 @@
         </field>
     </record>
 
+     <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.timesheet.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//a[hasclass('o_project_kanban_box')]" position="after">
+                    <a class="o_project_kanban_box" type="edit">
+                        Overview
+                    </a>
+                </xpath>
+                <xpath expr="//div[hasclass('o_primary')]" position="inside">
+                    <field name="progress" widget="progressbar"/>
+                </xpath>
+            </field>
+     </record>
+
 </odoo>

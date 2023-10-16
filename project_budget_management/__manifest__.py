@@ -8,7 +8,7 @@
     "website": "http://www.serpentcs.com",
     "category": "Project Budget Management",
     "license": "LGPL-3",
-    "depends": ["project_timesheet_management"],
+    "depends": ["hr_timesheet_sheet"],
     "data": [
         "security/ir.model.access.csv",
         "views/project_revised_budget_view.xml",

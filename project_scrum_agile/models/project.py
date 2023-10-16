@@ -47,6 +47,14 @@ class ProjectProject(models.Model):
         'Number of Releases',
         compute='_compute_count'
     )
+    resource_ids = fields.Many2many(
+        "res.partner",
+        "project_partner_rel",
+        "project_id",
+        "partner_id",
+        "Resources",
+        help="Resources working for this Project.",
+    )
 
 #     @api.model
 #     def create(self, vals):

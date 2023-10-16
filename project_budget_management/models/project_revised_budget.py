@@ -53,12 +53,11 @@ class ProjectRevisedBudget(models.Model):
     project_id = fields.Many2one("project.project", "Project")
     create_uid = fields.Many2one("res.users", "Changed by", readonly=True)
     create_date = fields.Datetime("Changed On", default=fields.Datetime.now())
-    new_budget = fields.Float("New Budget(Euro)", digits="Project Amount")
-    prev_budget = fields.Float(
-        "Previous Budget(Euro)",
+    new_budget = fields.Monetary("New Budget")
+    prev_budget = fields.Monetary(
+        "Previous Budget",
         compute="_compute_prev_budget",
         store=True,
-        digits="Project Amount",
     )
     comment = fields.Text(required=1)
     approved_by = fields.Many2one("res.users", "Approved by", readonly=True)
@@ -68,6 +67,7 @@ class ProjectRevisedBudget(models.Model):
         [("draft", "Draft"), ("approve", "Approved"), ("reject", "Rejected")],
         default="draft",
     )
+    currency_id = fields.Many2one('res.currency', related='project_id.currency_id', readonly=True)
 
     def goto_project_rec(self):
         action = self.sudo().env.ref("project.open_view_project_all_config")

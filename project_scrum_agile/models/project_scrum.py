@@ -279,11 +279,6 @@ class ProjectScrumSprint(models.Model):
     retrospective_start_to_do = fields.Text('Start to do')
     retrospective_continue_to_do = fields.Text('Continue to do')
     retrospective_stop_to_do = fields.Text('Stop to do')
-    backlog_ids = fields.One2many(
-        'project.scrum.product.backlog',
-        'sprint_id',
-        'Sprint Backlog'
-    )
     effective_hours = fields.Float(
         "Effective hours",
         compute='_compute_hours',
@@ -325,7 +320,6 @@ class ProjectScrumSprint(models.Model):
         'project.scrum.product.backlog',
         'sprint_id',
         "User Stories",
-
     )
     sprint_number = fields.Char(
         'Sprint number',
@@ -1146,7 +1140,7 @@ class ProjectTask(models.Model):
     name = fields.Char('Homework', translate=True)
     product_backlog_id = fields.Many2one(
         'project.scrum.product.backlog',
-        'Request',
+        'Product Backlog',
         help="Related product backlog that contains this task."
              "Used in SCRUM methodology"
     )
@@ -1154,6 +1148,8 @@ class ProjectTask(models.Model):
         'project.scrum.sprint',
         'Sprint',
         related='product_backlog_id.sprint_id',
+        store=True,
+        readonly=True
     )
     release_id = fields.Many2one(
         'project.scrum.release',

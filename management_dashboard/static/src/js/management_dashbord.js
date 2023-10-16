@@ -32,7 +32,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             'click .show_all_task': '_goto_all_tasks',
             'click .show_open_issue': '_goto_open_issues',
             'click .show_all_issue': '_goto_all_issues',
-            'click .running_cost': '_open_timesheet_invoice',
+            'click .running_cost_for_invoices': '_open_invoices',
+            'click .running_cost_for_timesheets': '_open_timesheets',
             'click .btn_at_risk_projects': '_open_at_risk_projects',
             'click #budget-risk-project-chart': '_goto_budget_projects_list',
             'click #projects-time-risk-chart': '_goto_projects_list',
@@ -118,8 +119,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 fields: ['progress', 'id', 'name', 'date_start','date',
                     'expected_end_date', 'date', 'projected_end_date', 'percentage_completed',
                     'spent_budget','revised_budget','actual_budget',
-                    'project_phase_stage', 'running_cost',
-                    'write_date','resource_count',
+                    'project_phase_stage', 'running_cost_for_invoices','running_cost_for_timesheets',
+                    'write_date',
                     'open_tasks_count', 'task_count', 'close_tasks_count',
                     'open_issues_count', 'close_issues_count',
                     'budget_of_completion', 'forecast_up_range', 'forecast_low_range'],
@@ -282,6 +283,15 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                         $('td', row).eq(11).addClass('bg-red text-center');
                     }
 
+                    var pending_timesheet = $(data[11]).attr("data-p");
+                    if (pending_timesheet == 1) {
+                        $('td', row).eq(11).addClass('bg-yellow text-center');
+                    } else if (pending_timesheet == 0) {
+                        $('td', row).eq(11).addClass('bg-green text-center');
+                    } else {
+                        $('td', row).eq(11).addClass('bg-red text-center');
+                    }
+
                     $('td', row).eq(12).addClass('text-center');
                     $('td', row).eq(13).addClass('text-center');
                 },
@@ -414,11 +424,17 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             var self = this;
             _.each(self.projects, function (project) {
                 var spent_budget_amount = project.spent_budget;
-                var running_cost = '<a class="running_cost" data-project="';
-                running_cost += project.id;
-                running_cost += '">';
-                running_cost += parseFloat(project.running_cost).toFixed(2);
-                running_cost += '</a>';
+                var running_cost_for_invoices = '<a class="goto_link running_cost_for_invoices" data-project="';
+                running_cost_for_invoices += project.id;
+                running_cost_for_invoices += '">';
+                running_cost_for_invoices += parseFloat(project.running_cost_for_invoices).toFixed(2);
+                running_cost_for_invoices += '</a>';
+
+                var running_cost_for_timesheets = '<a class="goto_link running_cost_for_timesheets" data-project="';
+                running_cost_for_timesheets += project.id;
+                running_cost_for_timesheets += '">';
+                running_cost_for_timesheets += parseFloat(project.running_cost_for_timesheets).toFixed(2);
+                running_cost_for_timesheets += '</a>';
 
                 var actual_budget = (project.revised_budget > 0) ? project.revised_budget : project.actual_budget;
 
@@ -446,18 +462,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 color_data += style;
                 color_data += '" />';
 
-                var active = (project.resource_count !== undefined) ? project.resource_count : 0;
-
-                var html = '<p style="display: none;">' + active + '</p>';
-                for (var i = 0; i < 10; i++) {
-                    if (i < active) {
-                        html += '<i class="resource_icon fa fa-male active"></i>';
-                    } else {
-                        html += '<i class="resource_icon fa fa-male block"></i>';
-                    }
-                }
-                var resource_cell = html;
-
                 var project_start = ((project.date_start !== false) ? self.format_date(project.date_start) : 'N/A');
 
                 var planned_date = ((project.expected_end_date !== false) ? self.format_date(project.expected_end_date) : 'N/A');
@@ -480,6 +484,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     var open_issue = parseInt(data['open_issue'])
                     var spent_budget = parseInt(data['spent_budget'])
                     var pending_invoice = parseInt(data['pending_invoice'])
+                    var pending_timesheet = parseInt(data['pending_timesheet'])
 
                     var open_issues = project.open_issues_count;
                     var close_issues = project.close_issues_count;
@@ -487,7 +492,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     self.heat_map.row.add([
                         name_cell,
                         color_data,
-                        resource_cell,
                         project_start,
                         planned_date,
                         project_end,
@@ -496,7 +500,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                         '<span class="d-none" data-i="'+open_issue+'">' + parseInt(open_issues) + '</span><a class="goto_link show_open_issue" data-project="' + project.id + '">' + parseInt(open_issues) + '</a>',
                         '<span class="d-none">' + (close_issues + open_issues) + '</span><a class="goto_link show_all_issue" style="color:unset"  data-project="' + project.id + '" >' + (close_issues + open_issues) + '</a>',
                         '<span class="d-none" data-b="'+spent_budget+'"></span>'+ parseFloat(spent_budget_amount).toFixed(2),
-                        '<span class="d-none" data-p="'+pending_invoice+'"></span>'+ running_cost,
+                        '<span class="d-none" data-p="'+pending_invoice+'"></span>'+ running_cost_for_invoices,
+                        '<span class="d-none" data-p="'+pending_timesheet+'"></span>'+ running_cost_for_timesheets,
                         parseFloat(actual_budget).toFixed(2),
                         progress
                     ]).draw(false);
@@ -696,42 +701,22 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             var self = this;
 
             return this._rpc({
-                model: 'timesheet.invoice',
-                method: 'search_read',
-                fields: ['total_amount', 'partner_id'],
-                domain: [['project_id', 'in', self.project_ids],
-                         ['state', 'in', ['pre-approved','confirm','approved','completed']]],
+                model: 'project.project',
+                method: 'get_total_project_cost_for_vendors',
+                args: [self.project_ids]
             }).then(function (details) {
                 var partner_dict = {}
                 if (details !== undefined) {
-                    _.each(details, function (invoice) {
-                        if (invoice.partner_id[0] in partner_dict){
-                            var amount = parseFloat(partner_dict[invoice.partner_id[0]][1]) + parseFloat(invoice.total_amount)
-                            partner_dict[invoice.partner_id[0]] = [invoice.partner_id[1], amount]
-                        }
-                        else{
-                            partner_dict[invoice.partner_id[0]] = [invoice.partner_id[1], invoice.total_amount]
-                        }
-                    })
-                    self.invoices = partner_dict;
+                    self.invoices = details;
 
                     Chart.defaults.global.defaultFontColor = '#292b2c';
 
                     var lab = [];
-                    var data = [];
                     var colors = [];
-                    var data_dict = {};
-
+                    var s_data = [];
                     _.each(self.invoices, function (inv) {
-                        data_dict[inv[1].toFixed(2)] = inv[0]
-                        data.push(inv[1].toFixed(2));
-                    })
-                    var s_data = (data).sort(function(a, b){
-                      return b - a;
-                    });
-
-                    _.each(s_data, function (inv){
-                        lab.push(data_dict[inv])
+                        lab.push(inv[0]);
+                        s_data.push(inv[1].toFixed(2));
                         colors.push(self.getRandomColor());
                     });
                     self.lab_len = lab.length
@@ -1260,28 +1245,66 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             });
         },
 
-        _open_timesheet_invoice: function (ev) {
+        _open_timesheets: function (ev) {
             ev.preventDefault();
             var self = this;
             self.show_sidebar();
-            this.do_action({
-                name: "Timesheet Invoices",
-                res_model: 'timesheet.invoice',
-                views: [
-                    [false, 'list'],
-                    [false, 'form'],
-                ],
-                type: 'ir.actions.act_window',
-                view_type: "list",
-                view_mode: "list",
-                domain: [
-                    ['project_id', '=', parseInt(ev.currentTarget.dataset.project)],
-                    ['state', 'in', ['draft', 'confirm', 'pre-approved']]
-                ],
-                context: {
-                    'default_project_id': parseInt(ev.currentTarget.dataset.project)
-                }
+            this._rpc({
+                model: 'project.project',
+                method: 'action_view_open_timesheet_sheets',
+                args: [parseInt(ev.currentTarget.dataset.project)],
+            }).then(function (actionData) {
+                return self.do_action(actionData);
             });
+//            this.do_action({
+//                name: "Timesheet Invoices",
+//                res_model: 'timesheet.invoice',
+//                views: [
+//                    [false, 'list'],
+//                    [false, 'form'],
+//                ],
+//                type: 'ir.actions.act_window',
+//                view_type: "list",
+//                view_mode: "list",
+//                domain: [
+//                    ['project_id', '=', parseInt(ev.currentTarget.dataset.project)],
+//                    ['state', 'in', ['draft', 'confirm', 'pre-approved']]
+//                ],
+//                context: {
+//                    'default_project_id': parseInt(ev.currentTarget.dataset.project)
+//                }
+//            });
+        },
+
+        _open_invoices: function (ev) {
+            ev.preventDefault();
+            var self = this;
+            self.show_sidebar();
+            this._rpc({
+                model: 'project.project',
+                method: 'action_view_open_vendor_bills',
+                args: [parseInt(ev.currentTarget.dataset.project)],
+            }).then(function (actionData) {
+                return self.do_action(actionData);
+            });
+//            this.do_action({
+//                name: "Timesheet Invoices",
+//                res_model: 'timesheet.invoice',
+//                views: [
+//                    [false, 'list'],
+//                    [false, 'form'],
+//                ],
+//                type: 'ir.actions.act_window',
+//                view_type: "list",
+//                view_mode: "list",
+//                domain: [
+//                    ['project_id', '=', parseInt(ev.currentTarget.dataset.project)],
+//                    ['state', 'in', ['draft', 'confirm', 'pre-approved']]
+//                ],
+//                context: {
+//                    'default_project_id': parseInt(ev.currentTarget.dataset.project)
+//                }
+//            });
         },
 
         _open_at_risk_projects: function (ev) {

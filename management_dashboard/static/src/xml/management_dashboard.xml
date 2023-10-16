@@ -113,7 +113,6 @@
                                     <tr>
                                         <th class="middle-header" width="28%">Project</th>
                                         <th class="middle-header" width="1%">Status</th>
-                                        <th class="middle-header" width="11%">Resources</th>
                                         <th class="middle-header" width="5%">Start Date</th>
                                         <th class="middle-header" width="5%">Planned Finish Date</th>
                                         <th class="middle-header" width="5%">Actual Finish Date</th>
@@ -123,6 +122,7 @@
                                         <th class="middle-header" width="5%">All Issues</th>
                                         <th class="middle-header" width="5%">Spent Budget</th>
                                         <th class="middle-header" width="5%">Pending Invoices</th>
+                                        <th class="middle-header" width="5%">Pending Timesheets</th>
                                         <th class="middle-header" width="5%">Budget</th>
                                         <th class="middle-header" width="5%">Progress</th>
                                     </tr>

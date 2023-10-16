@@ -61,6 +61,8 @@ class ManagementDashboard(models.Model):
         open_issue = 0
         spent_budget = 0
         pending_invoice = 0
+        pending_timesheet = 0
+        project = self.env['project.project'].browse(project['id'])
         # ('date_start', '>=', self._context.get('start_date')),
         # ('date_start', '<=', self._context.get('end_date')),
         project_tasks = self.env['project.task'].search(
@@ -85,6 +87,17 @@ class ManagementDashboard(models.Model):
                     open_task = 1
                 if daysdiff > 7 and open_task not in (2, 1):
                     open_task = 0
+
+        for timesheet_sheet in project.timesheet_ids.filtered(lambda l: l.sheet_state and l.sheet_state != 'done').mapped(
+                'sheet_id'):
+            create_date = timesheet_sheet.create_date.date()
+            daysdiff = (create_date - today_date).days
+            if daysdiff <= 1:
+                pending_timesheet = 2
+            if 7 >= daysdiff > 1 and pending_timesheet != 2:
+                pending_timesheet = 1
+            if daysdiff > 7 and pending_timesheet not in (2, 1):
+                pending_timesheet = 0
 
         project_issues = self.env['helpdesk.ticket'].with_context(
             view_project_issues=1).search([
@@ -122,20 +135,27 @@ class ManagementDashboard(models.Model):
             spent_budget = 1
         elif budget <= 10:
             spent_budget = 0
-
-        invoices = self.env['timesheet.invoice'].search([
-            ('project_id', '=', project['id']),
-            ('state', 'in', ('draft', 'confirm', 'pre-approved'))])
-
-        for inv in invoices or []:
-            if int(inv.timesheet_inv_age) > 30:
+        account_move_obj = self.env['account.move']
+        query = self.env['account.move.line']._search(
+            [('move_id.move_type', 'in', account_move_obj.get_purchase_types()), ('move_id.state', '=', 'draft')])
+        query.order = None
+        query.add_where('analytic_distribution ? %s', [str(project.analytic_account_id.id)])
+        query_string, query_param = query.select('DISTINCT account_move_line.move_id')
+        self._cr.execute(query_string, query_param)
+        move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
+        for move_id in move_ids:
+            create_date = account_move_obj.browse(move_id).create_date.date()
+            daysdiff = (create_date - today_date).days
+            if daysdiff <= 1:
                 pending_invoice = 2
-            elif 10 < int(inv.timesheet_inv_age) < 30 and pending_invoice != 2:
+            if 7 >= daysdiff > 1 and pending_invoice != 2:
                 pending_invoice = 1
-            elif int(inv.timesheet_inv_age) < 10 and pending_invoice not in (2, 1):
+            if daysdiff > 7 and pending_invoice not in (2, 1):
                 pending_invoice = 0
+
         return {
                 'spent_budget': spent_budget,
+                'pending_timesheet': pending_timesheet,
                 'pending_invoice': pending_invoice,
                 'open_task': open_task,
                 'open_issue': open_issue}
