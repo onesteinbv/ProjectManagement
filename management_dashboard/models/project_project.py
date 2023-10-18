@@ -53,12 +53,12 @@ class ProjectProject(models.Model):
         analytic_account_ids = projects.mapped('analytic_account_id').ids
         query = self.env['account.move.line'].sudo()._search(
             [('move_id.move_type', 'in', self.env['account.move'].get_purchase_types()),
-             ('price_subtotal', '!=', 0),
+             ('price_total', '!=', 0),
              ('parent_state', '=', 'posted'),
              ('is_downpayment', '=', False),('move_id.partner_id','!=',False)])
         query.add_where('account_move_line.analytic_distribution ?| %s',
                         [[str(analytic_account_id) for analytic_account_id in analytic_account_ids]],)
-        query_string, query_param = query.select('price_subtotal','account_move_line.partner_id')
+        query_string, query_param = query.select('price_total','account_move_line.partner_id')
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         if invoices_move_line_read:
@@ -71,9 +71,9 @@ class ProjectProject(models.Model):
             for line in invoices_move_line_read:
                 partner_id = line['partner_id']
                 if partner_id in partner_dict:
-                    partner_dict[partner_id][1] += line['price_subtotal']
+                    partner_dict[partner_id][1] += line['price_total']
                 else:
-                    partner_dict.update({partner_id:[partners[partner_id],line['price_subtotal']]})
+                    partner_dict.update({partner_id:[partners[partner_id],line['price_total']]})
         sorted_partners_by_amounts = dict(sorted(partner_dict.items(), key=lambda x: x[1][1], reverse=True))
         return sorted_partners_by_amounts
 
