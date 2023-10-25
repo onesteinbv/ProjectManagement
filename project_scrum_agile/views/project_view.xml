@@ -77,4 +77,37 @@
         </field>
     </record>
 
+
+    <record id="project_sharing_project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="starred" position="replace">
+                <filter string="Deferred Priority" name="deferred_priority" domain="[('priority', '=', 0)]"/>
+                <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 1)]"/>
+                <filter string="Medium Priority" name="medium_priority" domain="[('priority', '=', 2)]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', '=', 3)]"/>
+                <filter string="Critical Priority" name="critical_priority" domain="[('priority', '=', 4)]"/>
+                <filter string="Blocker Priority" name="blocker_priority" domain="[('priority', '=', 5)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_task_search_form" model="ir.ui.view">
+        <field name="name">project.task.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <filter name="starred" position="replace">
+                <filter string="Deferred Priority" name="deferred_priority" domain="[('priority', '=', 0)]"/>
+                <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 1)]"/>
+                <filter string="Medium Priority" name="medium_priority" domain="[('priority', '=', 2)]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', '=', 3)]"/>
+                <filter string="Critical Priority" name="critical_priority" domain="[('priority', '=', 4)]"/>
+                <filter string="Blocker Priority" name="blocker_priority" domain="[('priority', '=', 5)]"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>
