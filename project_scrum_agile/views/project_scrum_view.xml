@@ -58,6 +58,7 @@
                        options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                 <field name="color"/>
                 <field name="sequence"/>
+                <field name="priority"/>
                 <field name="name"/>
                 <field name="stage_id"/>
                 <field name="open"/>
@@ -130,6 +131,7 @@
                                             class="oe_kanban_avatar" alt='Image'/>
                                 </div>
                                 <div class="oe_kanban_footer_left">
+                                    <field name="priority" widget="priority"/>
                                     <span title="Remaining hours">
                                         <span class="fa fa-clock-o" title="Clock"/>
                                         <t t-esc="Math.round(record.expected_hours.raw_value)"/>
@@ -157,6 +159,7 @@
             <tree string="Product Backlog">
                 <field name="backlog_number"/>
                 <field name="sequence" invisible="True"/>
+                <field name="priority" widget="priority"/>
                 <field name="name"/>
                 <field name="role_job_id"/>
                 <field name="role_id"/>
@@ -220,6 +223,7 @@
                     <field name="categ_ids" widget="many2many_tags"/>
                     <group>
                         <group>
+                            <field name="priority" widget="priority"/>
                             <field name="project_id"
                                    domain="[('is_scrum', '=', True)]"
                                    required="1"/>
@@ -320,6 +324,13 @@
                 <field name="project_id" string="Project"/>
                 <field name="release_id" string="Release"/>
                 <field name="sprint_id" string="Sprint"/>
+                <separator/>
+                <filter string="Deferred Priority" name="deferred_priority" domain="[('priority', '=', 0)]"/>
+                <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 1)]"/>
+                <filter string="Medium Priority" name="medium_priority" domain="[('priority', '=', 2)]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', '=', 3)]"/>
+                <filter string="Critical Priority" name="critical_priority" domain="[('priority', '=', 4)]"/>
+                <filter string="Blocker Priority" name="blocker_priority" domain="[('priority', '=', 5)]"/>
                 <separator/>
                 <filter domain="[('user_id','=',uid)]" name= "created_by_me" help="Created by me"
                         icon="terp-personal"/>

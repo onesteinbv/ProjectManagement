@@ -701,7 +701,7 @@ class ProjectScrumProductBacklog(models.Model):
     _name = 'project.scrum.product.backlog'
     _description = "Product backlog where are user stories"
     _inherit = ['mail.thread']
-    _order = "sequence"
+    _order = "priority desc ,sequence"
 
     @api.depends('name', 'backlog_number')
     def name_get(self):
@@ -979,6 +979,13 @@ class ProjectScrumProductBacklog(models.Model):
         copy=False
     )
     categ_ids = fields.Many2many('project.tags', string='Tags')
+    priority = fields.Selection([('0', 'Deferred Priority'),
+                                 ('1', 'Low Priority'),
+                                 ('2', 'Medium Priority'),
+                                 ('3', 'High Priority'),
+                                 ('4', 'Critical Priority'),
+                                 ('5', 'Blocker Priority'),
+                                 ], default='0', string="Priority", index=True, tracking=True)
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -1189,6 +1196,13 @@ class ProjectTask(models.Model):
     ], required=True, default='task',
         help="The 'Type' is used for bifurcation of "
              "Task and Issue.")
+    priority = fields.Selection([('0', 'Deferred Priority'),
+                                 ('1', 'Low Priority'),
+                                 ('2', 'Medium Priority'),
+                                 ('3', 'High Priority'),
+                                 ('4', 'Critical Priority'),
+                                 ('5', 'Blocker Priority'),
+                                 ], string="Priority")
 
     def _track_subtype(self, init_values):
         self.ensure_one()
