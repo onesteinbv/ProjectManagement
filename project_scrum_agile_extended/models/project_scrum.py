@@ -64,6 +64,9 @@ class ProjectScrumSprint(models.Model):
     estimate_adjustment = fields.Float()
     weightage = fields.Float(compute="_compute_hours")
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
+
     @api.model
     def create(self, vals):
         """ This method used to add sprint details log in related
@@ -79,7 +82,8 @@ class ProjectScrumSprint(models.Model):
                 )
                 % (self.env.user.name, result.sprint_number, result.name)
             )
-            result.release_id.message_post(body=msg)
+            if result.release_id:
+                result.release_id.message_post(body=msg)
         return result
 
     def write(self, vals):
@@ -87,6 +91,38 @@ class ProjectScrumSprint(models.Model):
             release used in sprint """
         if vals.get("release_id", ""):
             for rec in self:
+                if rec.release_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Sprint Removed by: <span> %s </span></li><li>
+                        Sprint Number: <span> %s </span></li>
+                        Sprint Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.sprint_number, rec.name)
+                    )
+                    rec.release_id.message_post(body=msg)
+        res = super(ProjectScrumSprint, self).write(vals)
+        if vals.get("release_id", ""):
+            for rec in self:
+                if rec.release_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Sprint Added by: <span> %s </span></li><li>
+                        Sprint Number: <span> %s </span></li>
+                        Sprint Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.sprint_number, rec.name)
+                    )
+                    rec.release_id.message_post(body=msg)
+        return res
+
+    def unlink(self):
+        """ This method used to manage logs in sprint when remove
+            release from sprint """
+        for rec in self:
+            if rec.release_id:
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
@@ -97,33 +133,4 @@ class ProjectScrumSprint(models.Model):
                     % (self.env.user.name, rec.sprint_number, rec.name)
                 )
                 rec.release_id.message_post(body=msg)
-        res = super(ProjectScrumSprint, self).write(vals)
-        if vals.get("release_id", ""):
-            for rec in self:
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Sprint Added by: <span> %s </span></li><li>
-                    Sprint Number: <span> %s </span></li>
-                    Sprint Name: <span> %s </span></li>"""
-                    )
-                    % (self.env.user.name, rec.sprint_number, rec.name)
-                )
-                rec.release_id.message_post(body=msg)
-        return res
-
-    def unlink(self):
-        """ This method used to manage logs in sprint when remove
-            release from sprint """
-        for rec in self:
-            msg = (
-                _(
-                    """ <ul class="o_mail_thread_message_tracking">
-                <li>Sprint Removed by: <span> %s </span></li><li>
-                Sprint Number: <span> %s </span></li>
-                Sprint Name: <span> %s </span></li>"""
-                )
-                % (self.env.user.name, rec.sprint_number, rec.name)
-            )
-            rec.release_id.message_post(body=msg)
         return super(ProjectScrumSprint, self).unlink()

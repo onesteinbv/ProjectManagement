@@ -109,34 +109,39 @@ class ProjectScrumProductBacklog(models.Model):
         "Author Editable", compute="_compute_author_id_editable", store=False
     )
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'size' or super()._valid_field_parameter(field, name)
+
     def write(self, vals):
         """ This method is used to update logs of backlog details in release
             based on release detail update which used in backlog """
         if vals.get("release_id", ""):
             for rec in self:
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Removed by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
+                if rec.release_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Backlog Removed by: <span> %s </span></li><li>
+                        Backlog Number: <span> %s </span></li>
+                        Backlog Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.backlog_number, rec.name)
                     )
-                    % (self.env.user.name, rec.backlog_number, rec.name)
-                )
-                rec.release_id.message_post(body=msg)
+                    rec.release_id.message_post(body=msg)
         res = super(ProjectScrumProductBacklog, self).write(vals)
         if vals.get("release_id", ""):
             for rec in self:
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Added by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
+                if rec.release_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Backlog Added by: <span> %s </span></li><li>
+                        Backlog Number: <span> %s </span></li>
+                        Backlog Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, rec.backlog_number, rec.name)
                     )
-                    % (self.env.user.name, rec.backlog_number, rec.name)
-                )
-                rec.release_id.message_post(body=msg)
+                    rec.release_id.message_post(body=msg)
         return res
 
     @api.model_create_multi
@@ -148,30 +153,32 @@ class ProjectScrumProductBacklog(models.Model):
             result.message_unsubscribe(partner_ids=[result.project_id.user_id.id])
         for vals in vals_lst:
             if vals.get("release_id", ""):
-                msg = (
-                    _(
-                        """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Added by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
+                if result.release_id:
+                    msg = (
+                        _(
+                            """ <ul class="o_mail_thread_message_tracking">
+                        <li>Backlog Added by: <span> %s </span></li><li>
+                        Backlog Number: <span> %s </span></li>
+                        Backlog Name: <span> %s </span></li>"""
+                        )
+                        % (self.env.user.name, result.backlog_number, result.name)
                     )
-                    % (self.env.user.name, result.backlog_number, result.name)
-                )
-                result.release_id.message_post(body=msg)
+                    result.release_id.message_post(body=msg)
         return result
 
     def unlink(self):
         """ This method is used to remove logs from release detail when
             release removed form the backlog """
         for rec in self:
-            msg = (
-                _(
-                    """ <ul class="o_mail_thread_message_tracking">
-                <li>Backlog Removed by: <span> %s </span></li><li>
-                Backlog Number: <span> %s </span></li>
-                Backlog Name: <span> %s </span></li>"""
+            if rec.release_id:
+                msg = (
+                    _(
+                        """ <ul class="o_mail_thread_message_tracking">
+                    <li>Backlog Removed by: <span> %s </span></li><li>
+                    Backlog Number: <span> %s </span></li>
+                    Backlog Name: <span> %s </span></li>"""
+                    )
+                    % (self.env.user.name, rec.backlog_number, rec.name)
                 )
-                % (self.env.user.name, rec.backlog_number, rec.name)
-            )
-            rec.release_id.message_post(body=msg)
+                rec.release_id.message_post(body=msg)
         return super(ProjectScrumProductBacklog, self).unlink()

@@ -1,4 +1,5 @@
 web/web_environment_ribbon
+web/web_timeline
 agreement/agreement
 agreement_extended
 helpdesk/helpdesk_mgmt_project
