@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='high_priority']" position="replace">
                 <separator />
-                <filter string="Deferred Priority" name="deferred_priority" domain="[('priority', '=', 0)]"/>
+                <filter string="Priority Not Set" name="no_priority" domain="[('priority', '=', 0)]"/>
                 <filter string="Low Priority" name="low_priority" domain="[('priority', '=', 1)]"/>
                 <filter string="Medium Priority" name="medium_priority" domain="[('priority', '=', 2)]"/>
                 <filter string="High Priority" name="high_priority" domain="[('priority', '=', 3)]"/>
@@ -15,4 +15,3 @@
         </field>
     </record>
 </odoo>
-
