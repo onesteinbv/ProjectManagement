@@ -1008,12 +1008,12 @@ class ProjectScrumProductBacklog(models.Model):
         copy=False
     )
     categ_ids = fields.Many2many('project.tags', string='Tags')
-    priority = fields.Selection([('0', 'Deferred Priority'),
-                                 ('1', 'Low Priority'),
-                                 ('2', 'Medium Priority'),
-                                 ('3', 'High Priority'),
-                                 ('4', 'Critical Priority'),
-                                 ('5', 'Blocker Priority'),
+    priority = fields.Selection([('0', ''),
+                                 ('1', 'Low'),
+                                 ('2', 'Medium'),
+                                 ('3', 'High'),
+                                 ('4', 'Critical'),
+                                 ('5', 'Blocker'),
                                  ], default='0', string="Priority", index=True, tracking=True)
 
     @api.onchange('project_id')
@@ -1222,13 +1222,13 @@ class ProjectTask(models.Model):
     ], required=True, default='task',
         help="The 'Type' is used for bifurcation of "
              "Task and Issue.")
-    priority = fields.Selection([('0', 'Deferred Priority'),
-                                 ('1', 'Low Priority'),
-                                 ('2', 'Medium Priority'),
-                                 ('3', 'High Priority'),
-                                 ('4', 'Critical Priority'),
-                                 ('5', 'Blocker Priority'),
-                                 ], string="Priority")
+    priority = fields.Selection(selection_add=[('0', ''),
+                                               ('1', 'Low'),
+                                               ('2', 'Medium'),
+                                               ('3', 'High'),
+                                               ('4', 'Critical'),
+                                               ('5', 'Blocker'),
+                                               ], string="Priority")
 
     def _track_subtype(self, init_values):
         self.ensure_one()

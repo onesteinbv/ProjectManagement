@@ -10,13 +10,13 @@ class HelpdeskTicket(models.Model):
     ticket_aging = fields.Char(
         "Aging", compute="_compute_ticket_age",
         store=False, help="Support Ticket Age (in days).")
-    priority = fields.Selection([('0', 'Deferred Priority'),
-                                 ('1', 'Low Priority'),
-                                 ('2', 'Medium Priority'),
-                                 ('3', 'High Priority'),
-                                 ('4', 'Critical Priority'),
-                                 ('5', 'Blocker Priority'),
-                                 ], default="0", string="Priority")
+    priority = fields.Selection(selection_add=[('0', ''),
+                                               ('1', 'Low'),
+                                               ('2', 'Medium'),
+                                               ('3', 'High'),
+                                               ('4', 'Critical'),
+                                               ('5', 'Blocker'),
+                                               ], default="0", string="Priority")
 
     # Keeping for future scope
     # @api.model
