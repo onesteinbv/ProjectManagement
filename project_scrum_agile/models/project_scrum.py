@@ -384,7 +384,7 @@ class ProjectScrumSprint(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_dates(self):
         for sprint in self:
-            if sprint.date_start > sprint.date_stop:
+            if sprint.date_start and sprint.date_stop and sprint.date_start > sprint.date_stop:
                 raise ValidationError(_(
                     'The start date must be anterior to the end date !'))
 

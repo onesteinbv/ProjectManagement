@@ -69,6 +69,7 @@
 
     # Views
     'data': [
+        'data/project_scrum_extended_data.xml',
         'security/project_scrum_security.xml',
         'security/ir.model.access.csv',
         'views/email_template.xml',
@@ -85,7 +86,7 @@
         'wizards/analytic_timesheet_view.xml',
         'views/project_scrum_devteam_view.xml',
     ],
-    'demo': ['data/project_scrum_extended_data.xml'],
+    'demo': ['data/project_demo.xml'],
 
     # Odoo App Store Specific
     'images': ['static/description/Project-Scrum-Management-Agile-Methodology-banner.png'],

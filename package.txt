@@ -7,6 +7,7 @@ helpdesk/helpdesk_mgmt
 helpdesk/helpdesk_mgmt_project
 project/project_task_default_stage
 project/project_timeline
+pm_migration_custom
 project_budget_management
 project_management_security
 project_scrum_agile

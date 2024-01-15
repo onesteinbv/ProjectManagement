@@ -8,7 +8,6 @@
     "summary": """
         Adds more priorities to helpdesk tickets.
         """,
-    'website': 'http://www.onestein.eu',
     # Author
     "author": "Onestein",
     "depends": ["helpdesk_mgmt"],

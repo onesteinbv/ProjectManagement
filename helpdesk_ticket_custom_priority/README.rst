@@ -2,7 +2,7 @@
 Helpdesk Ticket Custom Priority
 ===============================
 
-This module adds more priorities to helpdesk tickets.
+This module Adds more priorities to helpdesk tickets.
 
 
 Authors
