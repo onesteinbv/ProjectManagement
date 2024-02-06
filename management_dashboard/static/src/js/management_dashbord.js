@@ -241,49 +241,48 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     $('td', row).eq(2).addClass('text-center');
                     $('td', row).eq(3).addClass('text-center');
                     $('td', row).eq(4).addClass('text-center');
-                    $('td', row).eq(5).addClass('text-center');
-                    var open_task = $(data[6]).attr("data-t");
+                    var open_task = $(data[5]).attr("data-t");
                     if (open_task == 1) {
-                        $('td', row).eq(6).addClass('bg-yellow text-center');
+                        $('td', row).eq(5).addClass('bg-yellow text-center');
                     } else if (open_task == 0) {
-                        $('td', row).eq(6).addClass('bg-green text-center');
+                        $('td', row).eq(5).addClass('bg-green text-center');
                     } else {
-                        $('td', row).eq(6).addClass('bg-red text-center');
+                        $('td', row).eq(5).addClass('bg-red text-center');
                     }
 
-                    $('td', row).eq(7).addClass('text-center');
+                    $('td', row).eq(6).addClass('text-center');
 
-                    var open_issue = $(data[8]).attr("data-i");
+                    var open_issue = $(data[7]).attr("data-i");
 
                     if (open_issue == 1) {
-                        $('td', row).eq(8).addClass('bg-yellow text-center');
+                        $('td', row).eq(7).addClass('bg-yellow text-center');
                     } else if (open_issue == 0) {
-                        $('td', row).eq(8).addClass('bg-green text-center');
+                        $('td', row).eq(7).addClass('bg-green text-center');
                     } else {
-                        $('td', row).eq(8).addClass('bg-red text-center');
+                        $('td', row).eq(7).addClass('bg-red text-center');
                     }
 
-                    $('td', row).eq(9).addClass('text-center');
+                    $('td', row).eq(8).addClass('text-center');
 
-                    var spent_budget = $(data[10]).attr("data-b");
+                    var spent_budget = $(data[9]).attr("data-b");
                     if (spent_budget == 1) {
-                        $('td', row).eq(10).addClass('bg-yellow text-center');
+                        $('td', row).eq(9).addClass('bg-yellow text-center');
                     } else if (spent_budget == 0) {
+                        $('td', row).eq(9).addClass('bg-green text-center');
+                    } else {
+                        $('td', row).eq(9).addClass('bg-red text-center');
+                    }
+
+                    var pending_invoice = $(data[10]).attr("data-p");
+                    if (pending_invoice == 1) {
+                        $('td', row).eq(10).addClass('bg-yellow text-center');
+                    } else if (pending_invoice == 0) {
                         $('td', row).eq(10).addClass('bg-green text-center');
                     } else {
                         $('td', row).eq(10).addClass('bg-red text-center');
                     }
 
-                    var pending_invoice = $(data[11]).attr("data-p");
-                    if (pending_invoice == 1) {
-                        $('td', row).eq(11).addClass('bg-yellow text-center');
-                    } else if (pending_invoice == 0) {
-                        $('td', row).eq(11).addClass('bg-green text-center');
-                    } else {
-                        $('td', row).eq(11).addClass('bg-red text-center');
-                    }
-
-                    var pending_timesheet = $(data[11]).attr("data-p");
+                    var pending_timesheet = $(data[11]).attr("data-s");
                     if (pending_timesheet == 1) {
                         $('td', row).eq(11).addClass('bg-yellow text-center');
                     } else if (pending_timesheet == 0) {
@@ -501,7 +500,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                         '<span class="d-none">' + (close_issues + open_issues) + '</span><a class="goto_link show_all_issue" style="color:unset"  data-project="' + project.id + '" >' + (close_issues + open_issues) + '</a>',
                         '<span class="d-none" data-b="'+spent_budget+'"></span>'+ parseFloat(spent_budget_amount).toFixed(2),
                         '<span class="d-none" data-p="'+pending_invoice+'"></span>'+ running_cost_for_invoices,
-                        '<span class="d-none" data-p="'+pending_timesheet+'"></span>'+ running_cost_for_timesheets,
+                        '<span class="d-none" data-s="'+pending_timesheet+'"></span>'+ running_cost_for_timesheets,
                         parseFloat(actual_budget).toFixed(2),
                         progress
                     ]).draw(false);

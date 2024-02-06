@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class SandboxTransferToBacklog(models.TransientModel):
     _name = 'project.scrum.sandbox.to.backlog'
-    _description = 'Transfer user story from sandbox to Product Backlogs'
+    _description = 'Transfer user story from sandbox to User Stories'
 
     role_id = fields.Many2one('project.scrum.role', "As")
     name = fields.Char('I want', size=128)
@@ -29,7 +29,7 @@ class SandboxTransferToBacklog(models.TransientModel):
         return res
 
     def do_transfer(self):
-        """ Transfer user story from sandbox to Product Backlogs
+        """ Transfer user story from sandbox to User Stories
         @param self: The object pointer
         """
         context = self._context or {}

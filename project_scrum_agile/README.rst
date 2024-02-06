@@ -38,10 +38,10 @@ Features
 
 - Sandbox
     - A developer of development team can add a user story to sandbox
-    - The product owner can valid it (transfer into product backlog) or delete it
+    - The product owner can valid it (transfer into user story) or delete it
 
 - Scrum
-    - Product Backlog
+    - User Stories
     - Sandbox
     - Sprints
     - Sprint Releases

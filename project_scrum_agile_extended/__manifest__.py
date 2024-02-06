@@ -7,7 +7,7 @@
     "category": "Project Scrum Management",
     "summary": """
         This application is used to manage total planned hours, progress,
-        weightage of sprint, sprint release, product backlog.
+        weightage of sprint, sprint release, user stories.
         This application used to manage logs in of sprint release from sprint.
         This application used to calculate meeting duration.
         """,

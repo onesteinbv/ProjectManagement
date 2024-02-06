@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 
 class BacklogCreateTask(models.TransientModel):
     _name = 'project.scrum.backlog.create.task'
-    _description = 'Create Tasks from Product Backlogs'
+    _description = 'Create Tasks from User Stories'
 
     user_id = fields.Many2one(
         'res.users',
@@ -14,7 +14,7 @@ class BacklogCreateTask(models.TransientModel):
     )
 
     def do_create(self):
-        """ Create Tasks from Product Backlogs
+        """ Create Tasks from User Stories
         @param self: The object pointer
         """
         context = self._context or {}

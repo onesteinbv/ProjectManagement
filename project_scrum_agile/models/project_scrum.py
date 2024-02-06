@@ -699,7 +699,7 @@ class ProjectScrumSprintBurndownLog(models.Model):
 
 class ProjectScrumProductBacklog(models.Model):
     _name = 'project.scrum.product.backlog'
-    _description = "Product backlog where are user stories"
+    _description = "User Stories"
     _inherit = ['mail.thread']
     _order = "priority desc ,sequence"
 
@@ -832,7 +832,7 @@ class ProjectScrumProductBacklog(models.Model):
     sequence = fields.Integer(
         'Sequences',
         help="Gives the sequence order when"
-             "displaying a list of product backlog.",
+             "displaying a list of user stories.",
         default=1000
     )
     expected_hours = fields.Float(
@@ -846,7 +846,7 @@ class ProjectScrumProductBacklog(models.Model):
     active = fields.Boolean(
         'Active',
         help="If Active field is set to true, it will allow you to hide"
-             "the product backlog without removing it.",
+             "the user story without removing it.",
         default=True
     )
     value_to_user = fields.Integer("Value for the user", default=50)
@@ -1147,8 +1147,8 @@ class ProjectTask(models.Model):
     name = fields.Char('Homework', translate=True)
     product_backlog_id = fields.Many2one(
         'project.scrum.product.backlog',
-        'Product Backlog',
-        help="Related product backlog that contains this task."
+        'User Story',
+        help="Related user story that contains this task."
              "Used in SCRUM methodology"
     )
     sprint_id = fields.Many2one(

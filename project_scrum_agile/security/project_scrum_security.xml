@@ -185,7 +185,7 @@
 
         <!-- project.scrum.product.backlog -->
         <record model="ir.rule" id="project_scrum_product_backlog_developer_rule">
-            <field name="name">Project Scrum Product backlog: See his/her own backlogs</field>
+            <field name="name">Project Scrum User Stories: See his/her own stories</field>
             <field name="model_id" ref="project_scrum_agile.model_project_scrum_product_backlog"/>
             <field name="domain_force">[('project_id.team_id', '=', user.scrum_devteam_id.id)]</field>
             <field name="groups" eval="[(4, ref('project_scrum_agile.group_scrum_developer'))]"/>
@@ -195,7 +195,7 @@
             <field name='perm_write' eval='True'/>
         </record>
         <record model="ir.rule" id="project_scrum_product_backlog_owner_master_rule">
-            <field name="name">Project Scrum Product backlog: All Backlogs</field>
+            <field name="name">Project Scrum User Stories: All Stories</field>
             <field name="model_id" ref="project_scrum_agile.model_project_scrum_product_backlog"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('project_scrum_agile.group_scrum_master')),(4, ref('project_scrum_agile.group_scrum_owner'))]"/>

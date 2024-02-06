@@ -22,6 +22,6 @@
         "views/timesheet_invoice_view.xml",
         "report/report_timesheet_invoice.xml",
     ],
-    "installable": True,
+    "installable": False,
     "application": True,
 }

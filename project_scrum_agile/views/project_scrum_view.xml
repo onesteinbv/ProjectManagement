@@ -47,7 +47,7 @@
         </field>
     </record>
 
-    <!-- PRODUCT BACKLOG KANBAN -->
+    <!-- USER STORY KANBAN -->
     <record model="ir.ui.view" id="view_project_scrum_product_backlog_kanban">
         <field name="name">view.project.scrum.product.backlog.kanban</field>
         <field name="model">project.scrum.product.backlog</field>
@@ -132,15 +132,15 @@
                                 </div>
                                 <div class="oe_kanban_footer_left">
                                     <field name="priority" widget="priority"/>
-                                    <span title="Remaining hours">
-                                        <span class="fa fa-clock-o" title="Clock"/>
-                                        <t t-esc="Math.round(record.expected_hours.raw_value)"/>
-                                        <span class="fa fa-hourglass" title="Hourglass"/>
-                                        <t t-esc="Math.round(record.effective_hours.raw_value)"/>
-                                        <span class="fa fa-bolt" title="bolt"/>
-                                        <t t-esc="Math.round(record.complexity.raw_value)"/>
-                                        <span class="fa fa-trophy" title="trophy"/>
-                                        <t t-esc="Math.round(record.value_to_user.raw_value)"/>
+                                    <span title="Remaining hours" class="ms-1">
+                                        <span class="fa fa-clock-o ms-1" title="Clock"/>
+                                        <span t-esc="Math.round(record.expected_hours.raw_value)" class="ms-1"/>
+                                        <span class="fa fa-hourglass ms-1" title="Hourglass"/>
+                                        <span t-esc="Math.round(record.effective_hours.raw_value)" class="ms-1"/>
+                                        <span class="fa fa-bolt ms-1" title="bolt"/>
+                                        <span t-esc="Math.round(record.complexity.raw_value)" class="ms-1"/>
+                                        <span class="fa fa-trophy ms-1" title="trophy"/>
+                                        <span t-esc="Math.round(record.value_to_user.raw_value)" class="ms-1"/>
                                     </span>
                                 </div>
                             </div>
@@ -151,12 +151,12 @@
         </field>
     </record>
 
-    <!-- PRODUCT BACKLOG TREE -->
+    <!-- USER STORY TREE -->
     <record model="ir.ui.view" id="view_project_scrum_product_backlog_tree">
         <field name="model">project.scrum.product.backlog</field>
         <field name="name">view.project.scrum.product.backlog.tree</field>
         <field name="arch" type="xml">
-            <tree string="Product Backlog">
+            <tree string="User Story">
                 <field name="backlog_number"/>
                 <field name="sequence" invisible="True"/>
                 <field name="priority" widget="priority"/>
@@ -180,12 +180,12 @@
         </field>
     </record>
 
-    <!-- PRODUCT BACKLOG FORM -->
+    <!-- USER STORY FORM -->
     <record model="ir.ui.view" id="view_project_scrum_product_backlog_form">
         <field name="model">project.scrum.product.backlog</field>
         <field name="name">view.project.scrum.product.backlog.form</field>
         <field name="arch" type="xml">
-            <form string="Product Backlog"
+            <form string="User Story"
                   class="o_form_project_tasks">
                 <header>
                     <button type="object" string="Open" name="button_open"
@@ -293,7 +293,7 @@
         </field>
     </record>
 
-    <!-- PRODUCT BACKLOG SEARCH -->
+    <!-- USER STORY SEARCH -->
     <record id="view_project_scrum_product_backlog_search" model="ir.ui.view">
         <field name="name">project.scrum.product.backlog.search</field>
         <field name="model">project.scrum.product.backlog</field>
@@ -358,10 +358,10 @@
         </field>
     </record>
 
-    <!-- PRODUCT BACKLOG ACTION -->
+    <!-- USER STORY ACTION -->
     <record model="ir.actions.act_window"
             id="action_project_scrum_product_backlog">
-        <field name="name">Product Backlog</field>
+        <field name="name">User Story</field>
         <field name="res_model">project.scrum.product.backlog</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{}</field>
@@ -369,10 +369,10 @@
                ref="view_project_scrum_product_backlog_search"/>
     </record>
 
-    <!-- PRODUCT BACKLOG MENU -->
+    <!-- USER STORY MENU -->
     <menuitem action="action_project_scrum_product_backlog"
               id="menu_action_project_scrum_product_backlog"
-              parent="project_scrum_agile.menu_scrum" name="Product Backlog"
+              parent="project_scrum_agile.menu_scrum" name="User Story"
               sequence="4"/>
 
     <!-- PROJECT SCRUM BURNDOWN LOG SEARCH -->
@@ -752,7 +752,7 @@
                                 <field name="effective_velocity"/>
                             </group>
                         </page>
-                        <page string="Product Backlog">
+                        <page string="User Story">
                             <field name="product_backlog_ids"
                                    context="{'default_project_id':project_id, 'default_product_backlog_id':active_id,
                                    'default_release_id':release_id,'default_sprint_id':active_id,}">

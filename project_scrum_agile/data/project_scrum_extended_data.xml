@@ -97,7 +97,7 @@
             <field name="description">Issue Closed</field>
         </record>
 
-        <!-- SCRUM PRODUCT BACKLOG -->
+        <!-- SCRUM USER STORY -->
         <record id="mt_story_new" model="mail.message.subtype">
             <field name="name">Requirement Created</field>
             <field name="res_model">project.scrum.product.backlog</field>
@@ -271,6 +271,7 @@
             <field name="code">project.task.number</field>
             <field name="prefix">TAR-</field>
             <field name="padding">10</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="seq_issue_number" model="ir.sequence">
@@ -278,6 +279,7 @@
             <field name="code">project.issue.number</field>
             <field name="prefix">INC-</field>
             <field name="padding">10</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="seq_story_number" model="ir.sequence">
@@ -285,6 +287,7 @@
             <field name="code">product.backlog.number</field>
             <field name="prefix">REQ-</field>
             <field name="padding">10</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="seq_sprint_number" model="ir.sequence">
@@ -292,6 +295,7 @@
             <field name="code">product.sprint.number</field>
             <field name="prefix">SPR-</field>
             <field name="padding">10</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="seq_release_number" model="ir.sequence">
@@ -299,6 +303,7 @@
             <field name="code">project.scrum.release</field>
             <field name="prefix">MOD-</field>
             <field name="padding">10</field>
+            <field name="company_id" eval="False"/>
         </record>
     </data>
 

@@ -27,7 +27,7 @@ class ProjectScrumRelease(models.Model):
     backlog_ids = fields.One2many(
         'project.scrum.product.backlog',
         'release_id',
-        "Product Backlog",
+        "User Stories",
         readonly=True
     )
     release_number = fields.Char(
