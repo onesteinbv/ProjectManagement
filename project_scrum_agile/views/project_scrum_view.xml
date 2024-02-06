@@ -85,7 +85,7 @@
                                     aria-labelledby="dLabel">
                                     <t t-if="widget.editable">
                                         <li style="padding: 3px 15px 3px 20px;">
-                                            <a type="edit">Edit Backlog</a>
+                                            <a type="edit">Edit Story</a>
                                         </li>
                                     </t>
                                     <t t-if="widget.deletable">

@@ -22,7 +22,7 @@ class ProjectTask(models.Model):
     def _compute_hours_get(self):
         """ This method is used to calculate weightage based on task stage,
             timesheet amount, estimate adjustment, planned hours,
-            child task planned hours, backlog task hours,
+            child task planned hours, user story task hours,
             child task effective hours etc """
         for task in self:
             weightage = children_hours = 0

@@ -13,7 +13,7 @@
                         context="{'search_default_project_id': active_id}"
                         icon="fa-files-o"
                         attrs="{'invisible':[('is_scrum', '=', False)]}">
-                    <field string="Backlogs" name="backlog_count"
+                    <field string="User Stories" name="backlog_count"
                            widget="statinfo"/>
                 </button>
                 <button class="oe_stat_button"

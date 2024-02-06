@@ -170,7 +170,7 @@ class ProjectScrumSprint(models.Model):
             sprint.write({'state': 'pending'})
 
     def update_burndownchart(self):
-        """ This Method Calculate Burndown Chart Data from Backlogs
+        """ This Method Calculate Burndown Chart Data from User Stories
         @param self: The object pointer
         """
         for sprint in self:
@@ -208,7 +208,7 @@ class ProjectScrumSprint(models.Model):
                 self.env['project.scrum.sprint.burndown.log'].create(data)
 
     def _compute_effective_velocity(self):
-        """ Calculate complexity of backlog
+        """ Calculate complexity of user story
         @param self: The object pointer
         """
         user_story_obj = self.env['project.scrum.product.backlog']
@@ -837,7 +837,7 @@ class ProjectScrumProductBacklog(models.Model):
     )
     expected_hours = fields.Float(
         'Planned Hours',
-        help='Estimated total time to do the Backlog'
+        help='Estimated total time to do the User Story'
     )
     complexity = fields.Integer(
         'Story Points',

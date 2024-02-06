@@ -39,7 +39,7 @@
     </record>
 
     <record id="project_scrum_product_backlog_team_member_rule" model="ir.rule">
-        <field name="name">Backlog - Team Member Access Rule</field>
+        <field name="name">User Story - Team Member Access Rule</field>
         <field
             name="model_id"
             ref="project_scrum_agile.model_project_scrum_product_backlog"
@@ -117,7 +117,7 @@
         id="project_scrum_product_backlog_project_coordinator_rule"
         model="ir.rule"
     >
-        <field name="name">Backlog - Project Coordinator Access Rule</field>
+        <field name="name">User Story - Project Coordinator Access Rule</field>
         <field
             name="model_id"
             ref="project_scrum_agile.model_project_scrum_product_backlog"

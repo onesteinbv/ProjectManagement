@@ -4,7 +4,7 @@
         <field name="name">project.scrum.sandbox.to.backlog.form</field>
         <field name="model">project.scrum.sandbox.to.backlog</field>
         <field name="arch" type="xml">
-            <form string="Transfer to backlog">
+            <form string="Transfer to User Story">
                 <group>
                     <field name="project_id" invisible="1"/>
                     <field name="release_id" required='1' style="width:50%;" domain="[('project_id','=',project_id)]"/>
@@ -21,7 +21,7 @@
 
     <!-- PROJECT SCRUM SANDBOX TO BACKLOG ACTION VIEW -->
     <record id="action_tranfer_to_backlog" model="ir.actions.act_window">
-        <field name="name">Transfer to Backlog</field>
+        <field name="name">Transfer to User Story</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">project.scrum.sandbox.to.backlog</field>
         <field name="view_mode">form</field>

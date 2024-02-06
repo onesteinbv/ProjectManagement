@@ -70,9 +70,9 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Backlog">
+                            <page string="User Story">
                                 <field name="backlog_ids">
-                                    <tree string="Backlogs">
+                                    <tree string="User Stories">
                                         <field name="backlog_number"/>
                                         <field name="name"/>
                                         <field name="role_job_id"/>

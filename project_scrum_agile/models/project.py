@@ -36,7 +36,7 @@ class ProjectProject(models.Model):
         ondelete='restrict')
     team_id = fields.Many2one('project.scrum.devteam', 'Team')
     backlog_count = fields.Integer(
-        "Number of Backlog",
+        "Number of User Stories",
         compute='_compute_count'
     )
     sprint_count = fields.Integer(

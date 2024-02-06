@@ -113,8 +113,8 @@ class ProjectScrumProductBacklog(models.Model):
         return name == 'size' or super()._valid_field_parameter(field, name)
 
     def write(self, vals):
-        """ This method is used to update logs of backlog details in release
-            based on release detail update which used in backlog """
+        """ This method is used to update logs of user story details in release
+            based on release detail update which used in user story """
         if vals.get("release_id", ""):
             user_name = self.env.user.name
             for rec in self:
@@ -122,9 +122,9 @@ class ProjectScrumProductBacklog(models.Model):
                     msg = (
                         _(
                             """ <ul class="o_mail_thread_message_tracking">
-                        <li>Backlog Removed by: <span> %s </span></li><li>
-                        Backlog Number: <span> %s </span></li>
-                        Backlog Name: <span> %s </span></li>"""
+                        <li>User Story Removed by: <span> %s </span></li><li>
+                        User Story Number: <span> %s </span></li>
+                        User Story Name: <span> %s </span></li>"""
                         )
                         % (user_name, rec.backlog_number, rec.name)
                     )
@@ -137,9 +137,9 @@ class ProjectScrumProductBacklog(models.Model):
                     msg = (
                         _(
                             """ <ul class="o_mail_thread_message_tracking">
-                        <li>Backlog Added by: <span> %s </span></li><li>
-                        Backlog Number: <span> %s </span></li>
-                        Backlog Name: <span> %s </span></li>"""
+                        <li>User Story Added by: <span> %s </span></li><li>
+                        User Story Number: <span> %s </span></li>
+                        User Story Name: <span> %s </span></li>"""
                         )
                         % (user_name, rec.backlog_number, rec.name)
                     )
@@ -148,7 +148,7 @@ class ProjectScrumProductBacklog(models.Model):
 
     @api.model_create_multi
     def create(self, vals_lst):
-        """ This method is used to manage logs of backlog details in release
+        """ This method is used to manage logs of user story details in release
             based on release used """
         result = super(ProjectScrumProductBacklog, self).create(vals_lst)
         user_name = self.env.user.name
@@ -159,9 +159,9 @@ class ProjectScrumProductBacklog(models.Model):
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Added by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
+                    <li>User Story Added by: <span> %s </span></li><li>
+                    User Story Number: <span> %s </span></li>
+                    User Story Name: <span> %s </span></li>"""
                     )
                     % (user_name, rec.backlog_number, rec.name)
                 )
@@ -170,16 +170,16 @@ class ProjectScrumProductBacklog(models.Model):
 
     def unlink(self):
         """ This method is used to remove logs from release detail when
-            release removed form the backlog """
+            release removed form the user story """
         user_name = self.env.user.name
         for rec in self:
             if rec.release_id:
                 msg = (
                     _(
                         """ <ul class="o_mail_thread_message_tracking">
-                    <li>Backlog Removed by: <span> %s </span></li><li>
-                    Backlog Number: <span> %s </span></li>
-                    Backlog Name: <span> %s </span></li>"""
+                    <li>User Story Removed by: <span> %s </span></li><li>
+                    User Story Number: <span> %s </span></li>
+                    User Story Name: <span> %s </span></li>"""
                     )
                     % (user_name, rec.backlog_number, rec.name)
                 )
