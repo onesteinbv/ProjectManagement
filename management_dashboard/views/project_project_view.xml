@@ -13,4 +13,23 @@
         </field>
     </record>
 
+    <record id="inherit_view_project_project_form" model="ir.ui.view">
+        <field name="name">project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="action"
+                    icon="fa-tasks"
+                    name="%(project.dblc_proj)d"
+                    context="{'search_default_open_tasks': 1}"
+                >
+                    <field string="Open Tasks" name="open_tasks_count" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

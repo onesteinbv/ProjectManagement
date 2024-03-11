@@ -35,8 +35,10 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             'click .running_cost_for_invoices': '_open_invoices',
             'click .running_cost_for_timesheets': '_open_timesheets',
             'click .btn_at_risk_projects': '_open_at_risk_projects',
+            'click #project-status-chart': '_goto_projects_list_by_stage',
             'click #budget-risk-project-chart': '_goto_budget_projects_list',
             'click #projects-time-risk-chart': '_goto_projects_list',
+            'click #vendor-utilization-chart': '_goto_vendor_bills_list',
         },
 
         format_date: function (value) {
@@ -98,7 +100,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 isUTC: false
             });
             self.week_number = moment(new Date()).week();
-            self.last_update_on = new Date('1990-01-01');
             return Promise.all([loadBundle(this), this._super()]).then(function() {
                 return self.fetch_data();
             })
@@ -111,8 +112,9 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
          * @override
          */
         // left
-        fetch_data: function () {
+        fetch_data: async function () {
             var self = this;
+            self.last_update_on = new Date();
             var data = this._rpc({
                 model: 'project.project',
                 method: 'search_read',
@@ -316,36 +318,42 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 defaultDate: self.end_date,
             });
             self.datepicker_widget_end.appendTo(self.$('#end_date'));
-
-            // self.datepicker_widget_start.$input.on('dp.change', function (ev) {
-            //     if (ev.date) {
-            //         if (self.datepicker_widget_start._formatClient(self.start_date) !== self.datepicker_widget_start._formatClient(ev.date)) {
-            //             self.start_date = ev.date;
-            //             if(self.server_date(self.end_date) < self.server_date(self.start_date)){
-            //                 alert("end date must be  greater than project start date.")
-            //                 self.end_date = ev.date;
-            //             }
-            //             self.$el.html('');
-            //             self.fetch_data();
-            //             self.$(".dashboard_filter_btn").removeClass('filter_active');
-            //         }
-            //     } else {
-            //         self.datepicker_widget_start.setValue(self.start_date);
-            //     }
-            // });
-
-            // self.datepicker_widget_end.$input.on('dp.change', function (ev) {
-            //     if (ev.date) {
-            //         if (self.datepicker_widget_end._formatClient(self.end_date) !== self.datepicker_widget_end._formatClient(ev.date)) {
-            //             self.end_date = ev.date;
-            //             self.$el.html('');
-            //             self.fetch_data();
-            //             self.$(".dashboard_filter_btn").removeClass('filter_active');
-            //         }
-            //     } else {
-            //         self.datepicker_widget_end.setValue(self.end_date);
-            //     }
-            // });
+            self.datepicker_widget_start.on('datetime_changed', this, async function () {
+                var value = self.datepicker_widget_start.getValue();
+                if (value) {
+                     if (self.datepicker_widget_start._formatClient(self.start_date) !== self.datepicker_widget_start._formatClient(value)) {
+                         if(self.server_date(self.end_date) < self.server_date(value)){
+                             alert("start date must be lesser than or equal to end date.")
+                             self.datepicker_widget_start.setValue(self.start_date);
+                             return;
+                         }
+                         self.start_date = value;
+                         await self.fetch_data();
+                         self.render_dashboard();
+                         self.$(".dashboard_filter_btn").removeClass('filter_active');
+                     }
+                 } else {
+                     self.datepicker_widget_start.setValue(self.start_date);
+                 }
+            });
+            self.datepicker_widget_end.on('datetime_changed', this, async function () {
+                var value = self.datepicker_widget_end.getValue();
+                if (value) {
+                     if (self.datepicker_widget_end._formatClient(self.end_date) !== self.datepicker_widget_end._formatClient(value)) {
+                         if(self.server_date(value) < self.server_date(self.start_date)){
+                             alert("end date must be greater than or equal to start date.")
+                             self.datepicker_widget_end.setValue(self.end_date);
+                             return;
+                         }
+                         self.end_date = value;
+                         await self.fetch_data();
+                         self.render_dashboard();
+                         self.$(".dashboard_filter_btn").removeClass('filter_active');
+                     }
+                 } else {
+                     self.datepicker_widget_end.setValue(self.end_date);
+                 }
+            });
         },
 
         show_sidebar: function () {
@@ -369,7 +377,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
     //      * @override
     //      */
         destroy: function () {
-            this.show_sidebar();
+//            this.show_sidebar();
             this._super.apply(this, arguments);
         },
 
@@ -714,8 +722,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     var colors = [];
                     var s_data = [];
                     _.each(self.invoices, function (inv) {
-                        lab.push(inv[0]);
-                        s_data.push(inv[1].toFixed(2));
+                        lab.push(inv[1][0]);
+                        s_data.push(inv[1][1].toFixed(2));
                         colors.push(self.getRandomColor());
                     });
                     self.lab_len = lab.length
@@ -956,7 +964,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             $(".bar-wrapper[data-id='Task 0']").remove(); // remove bar made by sample data
         },
 
-        _filter_dashboard: function (ev) {
+        _filter_dashboard: async function (ev) {
             var self = this;
             var filter = ev.currentTarget.dataset.filter;
             ev.currentTarget.classList.add('filter_active');
@@ -1039,14 +1047,14 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     break;
 
             }
-            self.fetch_data();
+            await self.fetch_data();
             self.render_dashboard();
         },
 
         _goto_project: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
+//            self.show_sidebar();
             this.do_action({
                 name: 'Project',
                 res_model: 'project.project',
@@ -1065,7 +1073,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             var self = this;
             var activePoints = self.budget_risk_project_chart.getElementsAtEvent(evt);
             if (activePoints[0]) {
-                self.show_sidebar();
+//                self.show_sidebar();
                 var chartData = activePoints[0]['_chart'].config.data;
                 var idx = activePoints[0]['_index'];
 
@@ -1073,18 +1081,18 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 var value = chartData.datasets[0].data[idx];
 
                 var project_ids = []
-                if (label === 'Forecast <= 110%'){
+                if (idx === 2){
                     project_ids = self.b_green_prj_ids
-                }else if (label === 'Forecast > 110% & <= 120%'){
+                }else if (idx === 1){
                     project_ids = self.b_orange_prj_ids
-                }else if (label === 'Forecast > 120%'){
+                }else if (idx === 0){
                     project_ids = self.b_red_prj_ids
                 }
 
                 self._rpc({
                     model: 'management.dashboard',
                     method: 'get_treeview_id',
-                    args: ['project.view_project_kanban'],
+                    args: ['project_budget_management.project_analysis_tree_view'],
                 }).then(function (viewId) {
                     self.do_action({
                         name: "Projects",
@@ -1108,7 +1116,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             var self = this;
             var activePoints = self.projects_time_risk_chart.getElementsAtEvent(evt);
             if (activePoints[0]) {
-                self.show_sidebar();
+//                self.show_sidebar();
                 var chartData = activePoints[0]['_chart'].config.data;
                 var idx = activePoints[0]['_index'];
 
@@ -1116,17 +1124,17 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 var value = chartData.datasets[0].data[idx];
 
                 var project_ids = []
-                if (label === 'Forecast <= 110%'){
+                if (idx === 2){
                     project_ids = self.green_prj_ids
-                }else if (label === 'Forecast > 110% & <= 120%'){
+                }else if (idx === 1){
                     project_ids = self.orange_prj_ids
-                }else if (label === 'Forecast > 120%'){
+                }else if (idx === 0){
                     project_ids = self.red_prj_ids
                 }
                 self._rpc({
                     model: 'management.dashboard',
                     method: 'get_treeview_id',
-                    args: ['project.view_project_kanban'],
+                    args: ['project_budget_management.project_analysis_tree_view'],
                 }).then(function (viewId) {
                     self.do_action({
                         name: "Projects",
@@ -1145,10 +1153,61 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
             }
         },
 
+        _goto_projects_list_by_stage: function (evt) {
+            evt.preventDefault();
+            var self = this;
+            var activePoints = self.proj_status_chart.getElementsAtEvent(evt);
+            if (activePoints[0]) {
+//                self.show_sidebar();
+                var chartData = activePoints[0]['_chart'].config.data;
+                var idx = activePoints[0]['_index'];
+
+                var label = chartData.labels[idx];
+                var value = chartData.datasets[0].data[idx];
+
+                self._rpc({
+                    model: 'management.dashboard',
+                    method: 'get_treeview_id',
+                    args: ['project_budget_management.project_analysis_tree_view'],
+                }).then(function (viewId) {
+                    self.do_action({
+                        name: "Projects",
+                        type:'ir.actions.act_window',
+                        res_model: 'project.project',
+                        views: [[viewId[0] || false, 'list'],
+                            [false, 'form'],
+                        ],
+                        view_type: "list",
+                        view_mode: "list",
+                        domain: [
+                            ['id', 'in', self.project_ids],['stage_id.name', '=', label]
+                        ],
+                    });
+                });
+            }
+        },
+
+        _goto_vendor_bills_list: function (evt) {
+            evt.preventDefault();
+            var self = this;
+            var activePoints = self.vendor_utilization_chart.getElementsAtEvent(evt);
+            if (activePoints[0]) {
+                var chartData = activePoints[0]['_chart'].config.data;
+                var idx = activePoints[0]['_index'];
+                var partner_id = self.invoices[idx][0];
+                this._rpc({
+                    model: 'project.project',
+                    method: 'action_view_vendor_bills_for_vendor',
+                    args: [self.project_ids,partner_id],
+                }).then(function (actionData) {
+                    return self.do_action(actionData);
+                });
+            }
+        },
+
         _goto_open_tasks: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
             this.do_action({
                 name: "Open Tasks",
                 res_model: 'project.task',
@@ -1173,7 +1232,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _goto_all_tasks: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
             this.do_action({
                 name: "All Tasks",
                 res_model: 'project.task',
@@ -1197,7 +1255,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _goto_open_issues: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
             this.do_action({
                 name: "Open Issues",
                 res_model: 'helpdesk.ticket',
@@ -1221,7 +1278,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _goto_all_issues: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
             this.do_action({
                 name: "All Issues",
                 res_model: 'helpdesk.ticket',
@@ -1244,7 +1300,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _open_timesheets: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
             this._rpc({
                 model: 'project.project',
                 method: 'action_view_open_timesheet_sheets',
@@ -1275,7 +1330,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _open_invoices: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
+//            self.show_sidebar();
             this._rpc({
                 model: 'project.project',
                 method: 'action_view_open_vendor_bills',
@@ -1306,7 +1361,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
         _open_at_risk_projects: function (ev) {
             ev.preventDefault();
             var self = this;
-            self.show_sidebar();
+//            self.show_sidebar();
             this.do_action({
                 name: "At Risk Projects",
                 res_model: 'project.project',
@@ -1321,7 +1376,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     'search_default_at_risk_project': true,
                 }
             });
-        }
+        },
     });
 
     core.action_registry.add('management_dashboard.PMDashboardView', PMDashboardView);

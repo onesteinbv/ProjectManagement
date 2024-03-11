@@ -70,7 +70,7 @@ class ProjectProject(models.Model):
                     partner_dict[partner_id][1] += line['price_total']
                 else:
                     partner_dict.update({partner_id:[partners[partner_id],line['price_total']]})
-        sorted_partners_by_amounts = dict(sorted(partner_dict.items(), key=lambda x: x[1][1], reverse=True))
+        sorted_partners_by_amounts = list(sorted(partner_dict.items(), reverse=True))
         return sorted_partners_by_amounts
 
     @api.model
@@ -105,6 +105,32 @@ class ProjectProject(models.Model):
             "domain": [('id', 'in', sheet_ids)],
             "context": {"create": False},
             "name": _("Timesheet Sheets"),
+            'view_mode': 'tree,form',
+            'views': [[False, 'list'], [False, 'form']],
+        }
+        return result
+
+    @api.model
+    def action_view_vendor_bills_for_vendor(self, project_ids, partner_id):
+        projects = self.env['project.project'].browse(project_ids)
+        analytic_account_ids = projects.mapped('analytic_account_id').ids
+        query = self.env['account.move.line'].sudo()._search(
+            [('move_id.move_type', 'in', self.env['account.move'].get_purchase_types()),
+             ('price_total', '!=', 0),
+             ('parent_state', '=', 'posted'),
+             ('is_downpayment', '=', False), ('move_id.partner_id', '=', partner_id)])
+        query.add_where('account_move_line.analytic_distribution ?| %s',
+                        [[str(analytic_account_id) for analytic_account_id in analytic_account_ids]], )
+        query.order = None
+        query_string, query_param = query.select('DISTINCT account_move_line.move_id')
+        self._cr.execute(query_string, query_param)
+        move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
+        result = {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "domain": [('id', 'in', move_ids)],
+            "context": {"create": False, 'default_move_type': 'in_invoice'},
+            "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
             'views': [[False, 'list'], [False, 'form']],
         }

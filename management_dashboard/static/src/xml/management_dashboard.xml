@@ -5,9 +5,9 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="dashboard_top_nav">
-                        <button class="dashboard_sidebar-toggle is-closed">
-                            <i class="fa fa-angle-right icon"/>
-                        </button>
+<!--                        <button class="dashboard_sidebar-toggle is-closed">-->
+<!--                            <i class="fa fa-angle-right icon"/>-->
+<!--                        </button>-->
 
                         <div class="dashboard_filter">
                             <button t-att-class="(widget.filter == 'today') ? 'dashboard_filter_btn filter_active' : 'dashboard_filter_btn'"
