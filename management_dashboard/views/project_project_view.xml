@@ -8,7 +8,7 @@
             <field name="expected_end_date" position="after">
                 <field name="progress" widget="progressbar" />
                 <field name="open_tasks_count" />
-                <field name="open_issues_count" />
+                <field name="todo_ticket_count" />
             </field>
         </field>
     </record>
