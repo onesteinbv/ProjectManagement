@@ -121,8 +121,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     'spent_budget','revised_budget','actual_budget',
                     'project_phase_stage', 'running_cost_for_invoices','running_cost_for_timesheets',
                     'write_date',
-                    'open_tasks_count', 'task_count', 'close_tasks_count',
-                    'open_issues_count', 'close_issues_count',
+                    'open_tasks_count',
+                    'todo_ticket_count',
                     'budget_of_completion', 'forecast_up_range', 'forecast_low_range'],
                 context: {
                     'start_date': self.server_date(self.start_date),
@@ -134,7 +134,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     var project_ids = [];
                     var list_proj = [];
                     var project_phase_stage = {};
-                    
+
                     _.each(details, function (project) {
                         var end_date = project.date || project.expected_end_date;
                         if (end_date && project.date_start){
@@ -143,7 +143,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                                 list_proj.push(project)
                                 project_ids.push(project.id)
                                 if(project_phase_stage[project.project_phase_stage]){
-                                    project_phase_stage[project.project_phase_stage] += 1; 
+                                    project_phase_stage[project.project_phase_stage] += 1;
                                 }
                                 else{
                                     project_phase_stage[project.project_phase_stage] = 1
@@ -155,7 +155,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                                 list_proj.push(project)
                                 project_ids.push(project.id)
                                 if(project_phase_stage[project.project_phase_stage]){
-                                    project_phase_stage[project.project_phase_stage] += 1; 
+                                    project_phase_stage[project.project_phase_stage] += 1;
                                 }
                                 else{
                                     project_phase_stage[project.project_phase_stage] = 1
@@ -167,7 +167,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                                 list_proj.push(project)
                                 project_ids.push(project.id)
                                 if(project_phase_stage[project.project_phase_stage]){
-                                    project_phase_stage[project.project_phase_stage] += 1; 
+                                    project_phase_stage[project.project_phase_stage] += 1;
                                 }
                                 else{
                                     project_phase_stage[project.project_phase_stage] = 1
@@ -178,7 +178,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                             list_proj.push(project)
                             project_ids.push(project.id)
                             if(project_phase_stage[project.project_phase_stage]){
-                                project_phase_stage[project.project_phase_stage] += 1; 
+                                project_phase_stage[project.project_phase_stage] += 1;
                             }
                             else{
                                 project_phase_stage[project.project_phase_stage] = 1
@@ -250,49 +250,49 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                         $('td', row).eq(5).addClass('bg-red text-center');
                     }
 
-                    $('td', row).eq(6).addClass('text-center');
+//                    $('td', row).eq(6).addClass('text-center');
 
-                    var open_issue = $(data[7]).attr("data-i");
+                    var open_issue = $(data[6]).attr("data-i");
 
                     if (open_issue == 1) {
-                        $('td', row).eq(7).addClass('bg-yellow text-center');
+                        $('td', row).eq(6).addClass('bg-yellow text-center');
                     } else if (open_issue == 0) {
+                        $('td', row).eq(6).addClass('bg-green text-center');
+                    } else {
+                        $('td', row).eq(6).addClass('bg-red text-center');
+                    }
+
+//                    $('td', row).eq(8).addClass('text-center');
+
+                    var spent_budget = $(data[7]).attr("data-b");
+                    if (spent_budget == 1) {
+                        $('td', row).eq(7).addClass('bg-yellow text-center');
+                    } else if (spent_budget == 0) {
                         $('td', row).eq(7).addClass('bg-green text-center');
                     } else {
                         $('td', row).eq(7).addClass('bg-red text-center');
                     }
 
-                    $('td', row).eq(8).addClass('text-center');
+                    var pending_invoice = $(data[8]).attr("data-p");
+                    if (pending_invoice == 1) {
+                        $('td', row).eq(8).addClass('bg-yellow text-center');
+                    } else if (pending_invoice == 0) {
+                        $('td', row).eq(8).addClass('bg-green text-center');
+                    } else {
+                        $('td', row).eq(8).addClass('bg-red text-center');
+                    }
 
-                    var spent_budget = $(data[9]).attr("data-b");
-                    if (spent_budget == 1) {
+                    var pending_timesheet = $(data[9]).attr("data-s");
+                    if (pending_timesheet == 1) {
                         $('td', row).eq(9).addClass('bg-yellow text-center');
-                    } else if (spent_budget == 0) {
+                    } else if (pending_timesheet == 0) {
                         $('td', row).eq(9).addClass('bg-green text-center');
                     } else {
                         $('td', row).eq(9).addClass('bg-red text-center');
                     }
 
-                    var pending_invoice = $(data[10]).attr("data-p");
-                    if (pending_invoice == 1) {
-                        $('td', row).eq(10).addClass('bg-yellow text-center');
-                    } else if (pending_invoice == 0) {
-                        $('td', row).eq(10).addClass('bg-green text-center');
-                    } else {
-                        $('td', row).eq(10).addClass('bg-red text-center');
-                    }
-
-                    var pending_timesheet = $(data[11]).attr("data-s");
-                    if (pending_timesheet == 1) {
-                        $('td', row).eq(11).addClass('bg-yellow text-center');
-                    } else if (pending_timesheet == 0) {
-                        $('td', row).eq(11).addClass('bg-green text-center');
-                    } else {
-                        $('td', row).eq(11).addClass('bg-red text-center');
-                    }
-
-                    $('td', row).eq(12).addClass('text-center');
-                    $('td', row).eq(13).addClass('text-center');
+                    $('td', row).eq(10).addClass('text-center');
+                    $('td', row).eq(11).addClass('text-center');
                 },
             });
             self.init_project_status_chart();
@@ -468,8 +468,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 var project_end = ((project.date !== false) ? self.format_date(project.date) : 'N/A');
 
                 var open_tasks = project.open_tasks_count;
-                var close_tasks = project.close_tasks_count;
-                var tasks_count = project.task_count;
+//                var close_tasks = project.close_tasks_count;
+//                var tasks_count = project.task_count;
                 self._rpc({
                     model: 'management.dashboard',
                     method: 'get_color_code',
@@ -485,8 +485,8 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     var pending_invoice = parseInt(data['pending_invoice'])
                     var pending_timesheet = parseInt(data['pending_timesheet'])
 
-                    var open_issues = project.open_issues_count;
-                    var close_issues = project.close_issues_count;
+                    var open_issues = project.todo_ticket_count;
+//                    var close_issues = project.close_issues_count;
                     var progress = project.progress;
                     self.heat_map.row.add([
                         name_cell,
@@ -495,9 +495,9 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                         planned_date,
                         project_end,
                         '<span class="d-none" data-t="'+open_task+'">' + parseInt(open_tasks) + '</span><a class="goto_link show_open_task" data-project="' + project.id + '">' + parseInt(open_tasks) + '</a>',
-                        '<span class="d-none">' + tasks_count + '</span><a class="goto_link show_all_task" style="color:unset" data-project="' + project.id + '">' + tasks_count + '</a>',
+//                        '<span class="d-none">' + tasks_count + '</span><a class="goto_link show_all_task" style="color:unset" data-project="' + project.id + '">' + tasks_count + '</a>',
                         '<span class="d-none" data-i="'+open_issue+'">' + parseInt(open_issues) + '</span><a class="goto_link show_open_issue" data-project="' + project.id + '">' + parseInt(open_issues) + '</a>',
-                        '<span class="d-none">' + (close_issues + open_issues) + '</span><a class="goto_link show_all_issue" style="color:unset"  data-project="' + project.id + '" >' + (close_issues + open_issues) + '</a>',
+//                        '<span class="d-none">' + (close_issues + open_issues) + '</span><a class="goto_link show_all_issue" style="color:unset"  data-project="' + project.id + '" >' + (close_issues + open_issues) + '</a>',
                         '<span class="d-none" data-b="'+spent_budget+'"></span>'+ parseFloat(spent_budget_amount).toFixed(2),
                         '<span class="d-none" data-p="'+pending_invoice+'"></span>'+ running_cost_for_invoices,
                         '<span class="d-none" data-s="'+pending_timesheet+'"></span>'+ running_cost_for_timesheets,
@@ -1161,8 +1161,7 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 view_type: "list",
                 view_mode: "list",
                 domain: [
-                    ['date_end', '=', false],
-                    ['stage_id.name', 'not in', ["Done", "Completed", "Approval", "Canceled", "Closure", "Release", "Implementation"]],
+                    ['is_closed', '=', false],
                     ['project_id', '=', parseInt(ev.currentTarget.dataset.project)]
                 ],
                 context: {
@@ -1210,11 +1209,10 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                 view_type: "list",
                 view_mode: "list",
                 domain: [
-                    ['closed_date', '=', false],
+                    ['closed', '=', false],
                     ['project_id', '=', parseInt(ev.currentTarget.dataset.project)]
                 ],
                 context: {
-                    'view_project_issues': '1',
                     'default_project_id': parseInt(ev.currentTarget.dataset.project),
                 }
             });
@@ -1238,7 +1236,6 @@ odoo.define('management_dashboard.PMDashboardView', function (require) {
                     ['project_id', '=', parseInt(ev.currentTarget.dataset.project)]
                 ],
                 context: {
-                    'view_project_issues': '1',
                     'default_project_id': parseInt(ev.currentTarget.dataset.project)
                 }
             });

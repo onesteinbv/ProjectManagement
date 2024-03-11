@@ -62,21 +62,10 @@ class ManagementDashboard(models.Model):
         spent_budget = 0
         pending_invoice = 0
         pending_timesheet = 0
-        project = self.env['project.project'].browse(project['id'])
-        # ('date_start', '>=', self._context.get('start_date')),
-        # ('date_start', '<=', self._context.get('end_date')),
-        project_tasks = self.env['project.task'].search(
-            [('project_id', '=', project['id']),
-             ('stage_id.name',
-                'not in',
-                ("Done", "Completed", "Approval",
-                 "Canceled", "Closure", "Release",
-                 "Implementation")),
-             ('date_end', '=', False)])
-
+        project_rec = self.env['project.project'].browse(project['id'])
         today_date = datetime.strptime(
             time.strftime('%Y-%m-%d'), '%Y-%m-%d').date()
-        for task in project_tasks:
+        for task in project_rec.task_ids:
             if task.schedule_date:
                 schedule_date = datetime.strptime(
                     str(task.schedule_date), '%Y-%m-%d %H:%M:%S').date()
@@ -88,8 +77,9 @@ class ManagementDashboard(models.Model):
                 if daysdiff > 7 and open_task not in (2, 1):
                     open_task = 0
 
-        for timesheet_sheet in project.timesheet_ids.filtered(lambda l: l.sheet_state and l.sheet_state != 'done').mapped(
-                'sheet_id'):
+        for timesheet_sheet in project_rec.timesheet_ids.filtered(
+                lambda l: l.sheet_state and l.sheet_state != 'done').mapped(
+            'sheet_id'):
             create_date = timesheet_sheet.create_date.date()
             daysdiff = (create_date - today_date).days
             if daysdiff <= 1:
@@ -99,16 +89,11 @@ class ManagementDashboard(models.Model):
             if daysdiff > 7 and pending_timesheet not in (2, 1):
                 pending_timesheet = 0
 
-        project_issues = self.env['helpdesk.ticket'].with_context(
-            view_project_issues=1).search([
-                ('stage_id.closed', '!=', True),
-                ('project_id.id', '=', project['id']),
-                ('closed_date', '=', False)])
-        for issue in project_issues or []:
+        for issue in project_rec.ticket_ids.filtered(lambda t: not t.closed):
             if ((int(int(issue.ticket_aging)) > 30 and issue.priority == '0') or
                     (int(issue.ticket_aging) > 10 and issue.priority == '1') or
                     (int(issue.ticket_aging) > 2 and issue.priority in
-                        ('2', '3'))):
+                     ('2', '3'))):
                 open_issue = 2
             if ((10 < int(issue.ticket_aging) <= 30 and
                  issue.priority == '0') or
@@ -121,13 +106,13 @@ class ManagementDashboard(models.Model):
             if ((int(issue.ticket_aging) <= 10 and issue.priority == '0') or
                     (int(issue.ticket_aging) <= 2 and issue.priority == '1') or
                     (int(issue.ticket_aging) == 0 and issue.priority in
-                        ('2', '3')) and
+                     ('2', '3')) and
                     open_issue not in (2, 1)):
                 open_issue = 0
 
         budget = 0
         if project['spent_budget'] > 0 and project['actual_budget'] > 0:
-            budget = ((project['spent_budget'] - project['actual_budget'])/project['actual_budget']) * 100
+            budget = ((project['spent_budget'] - project['actual_budget']) / project['actual_budget']) * 100
 
         if budget > 30:
             spent_budget = 2
@@ -139,7 +124,7 @@ class ManagementDashboard(models.Model):
         query = self.env['account.move.line']._search(
             [('move_id.move_type', 'in', account_move_obj.get_purchase_types()), ('move_id.state', '=', 'draft')])
         query.order = None
-        query.add_where('analytic_distribution ? %s', [str(project.analytic_account_id.id)])
+        query.add_where('analytic_distribution ? %s', [str(project_rec.analytic_account_id.id)])
         query_string, query_param = query.select('DISTINCT account_move_line.move_id')
         self._cr.execute(query_string, query_param)
         move_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
@@ -154,11 +139,11 @@ class ManagementDashboard(models.Model):
                 pending_invoice = 0
 
         return {
-                'spent_budget': spent_budget,
-                'pending_timesheet': pending_timesheet,
-                'pending_invoice': pending_invoice,
-                'open_task': open_task,
-                'open_issue': open_issue}
+            'spent_budget': spent_budget,
+            'pending_timesheet': pending_timesheet,
+            'pending_invoice': pending_invoice,
+            'open_task': open_task,
+            'open_issue': open_issue}
 
     @api.model
     def get_treeview_id(self, view):
