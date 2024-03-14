@@ -3,6 +3,7 @@
     <record id="helpdesk_ticket_created_email_template" model="mail.template">
         <field name="name">Support Ticket Number</field>
         <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket" />
+        <field name="force_email_layout_id" ref="mail_layout_force.mail_layout_noop" />
         <field name="email_from">{{ object.team_id.email or object.company_id.partner_id.email or ''}}</field>
         <field
                 name="email_to"
@@ -108,6 +109,7 @@
     <record id="helpdesk_ticket_draft_email_template" model="mail.template">
         <field name="name">Support</field>
         <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket" />
+        <field name="force_email_layout_id" ref="mail_layout_force.mail_layout_noop" />
         <field name="email_from">{{ object.team_id.email or object.company_id.partner_id.email or ''}}</field>
         <field
                 name="email_to"

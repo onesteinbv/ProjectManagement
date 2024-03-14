@@ -8,7 +8,7 @@
     "category": "After-Sales",
     "author": "Onestein BV",
     "website": "https://www.onestein.eu",
-    "depends": ["helpdesk_mgmt", "base_automation"],
+    "depends": ["helpdesk_mgmt","base_automation","mail_layout_force"],
     "data": [
         "data/mail_template.xml",
         "data/automated_action.xml",

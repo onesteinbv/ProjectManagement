@@ -97,6 +97,9 @@
                 <filter string="Blocker Priority" name="blocker_priority" domain="[('priority', '=', 5)]"/>
             </filter>
             <filter name="low_priority" position="replace"/>
+            <filter name="date_deadline" position="after">
+                <filter string="Task Type" name="task_type" context="{'group_by': 'type'}"/>
+            </filter>
         </field>
     </record>
 
@@ -114,6 +117,9 @@
                 <filter string="Blocker Priority" name="blocker_priority" domain="[('priority', '=', 5)]"/>
             </filter>
             <filter name="low_priority" position="replace"/>
+            <filter name="group_create_date" position="after">
+                <filter string="Task Type" name="task_type" context="{'group_by': 'type'}"/>
+            </filter>
         </field>
     </record>
 

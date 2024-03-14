@@ -3,6 +3,7 @@ from odoo import fields, models, api
 
 class MailMessage(models.Model):
     _inherit = "mail.message"
+    _order = "date desc"
 
     old_res_id = fields.Integer('Old Resource Id')
     create_date_old = fields.Datetime('Old Created on')
