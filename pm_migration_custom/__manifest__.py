@@ -4,6 +4,7 @@
     "name": "PM Migration Custom",
     "summary": """
         Migration""",
+    "category": "Hidden",
     "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "depends": ["management_dashboard"],
