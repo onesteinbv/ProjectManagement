@@ -18,3 +18,7 @@
 	path = timesheet
 	url = https://github.com/OCA/timesheet.git
 	branch = 16.0
+[submodule "social"]
+	path = social
+	url = https://github.com/OCA/social.git
+	branch = 16.0

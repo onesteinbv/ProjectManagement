@@ -13,13 +13,13 @@
         <field
             name="lang"
         >{{ object.partner_id.lang or ctx.get("lang") or object.company_id.partner_id.lang or object.env.user.lang }}</field>
-        <field name="subject">Ticket {{object.id}}: {{object.number or 'n/a' }}</field>
+        <field name="subject">Ticket {{object.number or 'n/a' }}: {{object.name or '' }}</field>
         <field name="body_html" type="html">
             <div>Dear <t t-out="object.partner_id.name or object.partner_name or ''" />
                     <br />
                     <br />
                     <p>
-                        Thank you for your report. Your report has been registered under ticket <t t-out="object.id" /> and is being processed.
+                        Thank you for your report. Your report has been registered under ticket <t t-out="object.name" /> and is being processed.
                     </p>
                     <p>If there are any questions or uncertainties, please let us know.</p>
                     Kind regards,
@@ -96,6 +96,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <br />
                     <p>
                         This e-mail is intended for the addressee’s eyes only. If you are not the intended recipient, you are hereby kindly requested to inform the sender of this. In view of the electronic nature of this communication, <t t-out="object.company_id.name" /> is neither liable for the proper and complete transmission of the information contained therein nor for any delay in its receipt. For information about <t t-out="object.company_id.name" />
                         <t t-if="object.company_id.website">
@@ -119,11 +120,12 @@
         <field
             name="lang"
         >{{ object.partner_id.lang or ctx.get("lang") or object.company_id.partner_id.lang or object.env.user.lang }}</field>
-        <field name="subject">Ticket {{object.id}}: {{object.number or 'n/a' }}</field>
+        <field name="subject">Ticket {{object.number or 'n/a' }}: {{object.name or '' }}</field>
         <field name="body_html" type="html">
             <div>Dear <t t-out="object.partner_id.name or object.partner_name or ''" />
                     <br />
                     <br />
+                    Kind regards,
                     <br/>
                     <div style="font-family:Helvetica, Arial;font-size: 12pt; color: #000000;">
                         <table style="font-family:Helvetica, Arial;border-spacing:0px;" cellspacing="0" cellpadding="0"
@@ -197,6 +199,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <br />
                     <p>
                         This e-mail is intended for the addressee’s eyes only. If you are not the intended recipient, you are hereby kindly requested to inform the sender of this. In view of the electronic nature of this communication, <t t-out="object.company_id.name" /> is neither liable for the proper and complete transmission of the information contained therein nor for any delay in its receipt. For information about <t t-out="object.company_id.name" />
                         <t t-if="object.company_id.website">

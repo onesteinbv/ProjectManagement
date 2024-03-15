@@ -5,6 +5,7 @@ agreement/agreement
 agreement_extended
 helpdesk/helpdesk_mgmt
 helpdesk/helpdesk_mgmt_project
+helpdesk_mgmt_email
 helpdesk_mgmt_fetchmail_multicompany
 helpdesk_ticket_custom_priority
 project/project_task_default_stage
@@ -16,5 +17,6 @@ project_scrum_agile
 project_scrum_agile_extended
 project_team_leave_management
 management_dashboard
+social/mail_layout_force
 theme_onestein
 timesheet/hr_timesheet_sheet
