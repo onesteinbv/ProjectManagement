@@ -1,6 +1,8 @@
 web/web_environment_ribbon
 web/web_timeline
 web/web_widget_x2many_2d_matrix
+account_invoice_hour_report
+account_invoice_hour_report_non_billable
 agreement/agreement
 agreement_extended
 helpdesk/helpdesk_mgmt
@@ -17,6 +19,12 @@ project_scrum_agile
 project_scrum_agile_extended
 project_team_leave_management
 management_dashboard
+sale_timesheet_approval
+sale_timesheet_approval_sheet
+sale_timesheet_custom_fields
 social/mail_layout_force
 theme_onestein
 timesheet/hr_timesheet_sheet
+addons-oca/mail_attach_existing_attachment
+addons-oca/mail_attach_existing_attachment_account
+addons-oca/sale_timesheet_line_non_billable
