@@ -22,11 +22,13 @@ class HrTimesheetInvoiceCreate(models.TransientModel):
         self.ensure_one()
         line_ids = self.env.context.get("active_ids")
         lines = self.env["account.analytic.line"].browse(line_ids)
+        lines.filtered(lambda x: not x.is_approved).write({"is_approved": True})
         sale_orders = lines.mapped("order_id")
         ctx = {
             "active_model": "sale.order",
             "active_ids": sale_orders.ids,
             "open_invoices": True,
+            "timesheet_ids": line_ids,
         }
         payment = (
             self.env["sale.advance.payment.inv"]
@@ -37,5 +39,5 @@ class HrTimesheetInvoiceCreate(models.TransientModel):
                 }
             )
         )
-        lines.filtered(lambda x: not x.is_approved).write({"is_approved": True})
+
         return payment.create_invoices()
